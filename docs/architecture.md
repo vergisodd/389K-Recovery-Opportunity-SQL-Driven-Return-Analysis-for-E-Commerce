@@ -1,6 +1,6 @@
 ## Project Architecture
 
-![Project Architecture](./Project_Architecture_ETL.png)
+![Project Architecture](./architecture_ETL.png)
 
 ### Architecture Flow
 
