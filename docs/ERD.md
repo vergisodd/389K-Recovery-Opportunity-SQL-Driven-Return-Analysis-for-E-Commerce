@@ -1,47 +1,86 @@
 # Entity Relationship Diagram (ERD)
 
-![ERD](./ERD.png)
-
 ## Overview
-This Entity Relationship Diagram (ERD) represents the relational data model used for the **E-commerce Revenue Leakage Analysis** project.
 
-The schema is designed based on the raw Kaggle e-commerce dataset to support accurate calculation of revenue loss, return rates, category performance, and high-risk product identification.
+The data model for this project was designed to support accurate, multi-dimensional analysis of return-driven revenue leakage. The schema closely mirrors the structure of the source dataset while eliminating redundancy and enabling efficient SQL joins across customers, products, orders, and returns.
 
-## Data Model Structure
-The model consists of four main tables:
+![ERD](ERD.png)
 
-- **customers** — Customer demographic information
-- **products** — Product master data including category and pricing
-- **orders** — Core transaction records (one product per order)
-- **returns** — Return transactions linked to orders
+---
 
-The schema is centered around the **orders** table, which connects customers, products, and returns.
+## Schema
 
-## Key Relationships
-- One **customer** can place many **orders** (1:N)
-- One **product** can appear in many **orders** (1:N)
-- One **order** can have at most one **return** (1:0..1)
-- Returns are linked directly to orders for accurate revenue leakage tracking
+```
+customers
+─────────────────────────
+customer_id   PK
+customer_name
+email
+region
 
-**Note:** The dataset structure indicates each order contains a single product (no separate order_items table was needed).
+products
+─────────────────────────
+product_id    PK
+product_name
+category
+unit_price
+
+orders
+─────────────────────────
+order_id      PK
+customer_id   FK → customers.customer_id
+product_id    FK → products.product_id
+order_date
+order_value
+quantity
+
+returns
+─────────────────────────
+return_id     PK
+order_id      FK → orders.order_id
+return_date
+return_reason
+```
+
+---
+
+## Relationships
+
+| Relationship | Cardinality | Notes |
+|---|---|---|
+| customers → orders | 1 : N | One customer can place many orders |
+| products → orders | 1 : N | One product can appear in many orders |
+| orders → returns | 1 : 0..1 | Each order has at most one return |
+
+The dataset structure has one product per order — no separate `order_items` table was needed. Returns are linked directly to orders rather than customers or products, which enables precise revenue leakage calculations without double-counting.
+
+---
 
 ## Design Rationale
-- **Simplicity & Fidelity**: The model closely mirrors the actual structure of the provided dataset.
-- **Analytical Efficiency**: Enables straightforward SQL joins for calculating:
-  - Total revenue and net revenue
-  - Return loss by product, category, and customer
-  - Return rates (by revenue and by order count)
-  - High-risk products and categories (Electronics & Fashion)
-- **Performance**: Direct foreign key relationships support efficient aggregations and window functions used in the analysis.
 
-## Tools Used to Generate ERD
-- **dbdiagram.io** — For designing and visualizing the ERD
+**Why normalize at all?**
+The raw Kaggle data is a single denormalized CSV. Normalizing it into four tables eliminates repeated customer and product data across rows, reduces the risk of aggregation errors, and mirrors how this data would actually be stored in a production e-commerce database.
+
+**Why center the model on `orders`?**
+Orders are the unit of analysis for both revenue (order value) and returns (return linked to a specific order). Everything else — customer demographics, product metadata, return records — joins through the orders table. This makes complex aggregations clean and avoids ambiguous fan-out joins.
+
+**Why a 1:0..1 relationship for returns?**
+The dataset does not support multiple returns per order, and business logic typically treats a return as tied to a specific transaction. Modeling it as optional (0..1) on the order side keeps the schema honest about what the data actually contains.
+
+---
 
 ## Analytical Impact
-This data model directly enabled key findings in the project, including:
-- Identification that Electronics drives the highest absolute return loss
-- Discovery that Fashion has the highest return rate
-- Pareto analysis showing that a small number of products account for a large portion of losses
-- High-risk product flagging (100% return rate)
 
-The clean relational structure made complex revenue leakage calculations efficient and reproducible.
+This structure directly enabled the project's key findings:
+
+- **Category-level return loss** — joining `products.category` through `orders` to `returns` allows clean aggregation of return value by category with no cross-joins
+- **Customer risk segmentation** — joining `customers` to `orders` to `returns` enables return rate calculation per customer with full order history context
+- **Product Pareto analysis** — the same join path, grouped by `product_id`, surfaces which SKUs drive disproportionate leakage
+- **100%-return-rate flagging** — a simple ratio of `COUNT(return_id) / COUNT(order_id)` per product, with a sample-size filter to avoid flagging single-order products unfairly
+
+---
+
+## Tool Used
+
+ERD designed in [dbdiagram.io](https://dbdiagram.io).
+
