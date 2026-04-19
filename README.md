@@ -116,8 +116,13 @@ ecommerce-revenue-leakage/
 │   ├── 05_product_analysis.sql     # Pareto analysis + loss ranking
 │   └── 06_category_analysis.sql   # Category return rates + leakage
 │
+├── dashboard/
+│   ├── dashboard_preview.png       # Static preview image
+│   └── e-comm_dashboard.pbix       # Power BI dashboard file
+│
 └── README.md
 ```
+
 
 <br>
 
