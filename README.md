@@ -201,7 +201,7 @@ After delivering these findings, my next three priorities would be:
 
 ## Dataset
 
-[Kaggle: E-Commerce Dataset — Orders & Returns](https://www.kaggle.com/datasets/)
+[Kaggle: E-Commerce Dataset — Orders & Returns](https://www.kaggle.com/datasets/angellawl/e-commerce-dataset-order-and-return?utm_source=chatgpt.com)
 
 <br>
 
