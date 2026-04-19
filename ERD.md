@@ -2,46 +2,46 @@
 
 ![ERD](./ERD.png)
 
----
-
 ## Overview
+This Entity Relationship Diagram (ERD) represents the relational data model used for the **E-commerce Revenue Leakage Analysis** project.
 
-This diagram represents the relational data model used in this project.  
-The dataset was transformed from a raw staging table into a normalized schema to support efficient querying and accurate analysis.
-
----
+The schema is designed based on the raw Kaggle e-commerce dataset to support accurate calculation of revenue loss, return rates, category performance, and high-risk product identification.
 
 ## Data Model Structure
+The model consists of four main tables:
+
+- **customers** — Customer demographic information
+- **products** — Product master data including category and pricing
+- **orders** — Core transaction records (one product per order)
+- **returns** — Return transactions linked to orders
 
 The schema is centered around the **orders** table, which connects customers, products, and returns.
 
----
-
 ## Key Relationships
+- One **customer** can place many **orders** (1:N)
+- One **product** can appear in many **orders** (1:N)
+- One **order** can have at most one **return** (1:0..1)
+- Returns are linked directly to orders for accurate revenue leakage tracking
 
-- A **customer** can place multiple orders  
-- A **product** can appear in multiple orders  
-- Each **order** is associated with one customer and one product  
-- Each **order** can have at most one corresponding return  
-
----
+**Note:** The dataset structure indicates each order contains a single product (no separate order_items table was needed).
 
 ## Design Rationale
+- **Simplicity & Fidelity**: The model closely mirrors the actual structure of the provided dataset.
+- **Analytical Efficiency**: Enables straightforward SQL joins for calculating:
+  - Total revenue and net revenue
+  - Return loss by product, category, and customer
+  - Return rates (by revenue and by order count)
+  - High-risk products and categories (Electronics & Fashion)
+- **Performance**: Direct foreign key relationships support efficient aggregations and window functions used in the analysis.
 
-- **Normalization** reduces data redundancy and improves consistency  
-- **Clear relationships** enable efficient joins across entities  
-- **Separation of concerns** allows independent analysis of customers, products, and returns  
-- **Return linkage** ensures accurate calculation of revenue loss  
-
----
+## Tools Used to Generate ERD
+- **dbdiagram.io** — For designing and visualizing the ERD
 
 ## Analytical Impact
+This data model directly enabled key findings in the project, including:
+- Identification that Electronics drives the highest absolute return loss
+- Discovery that Fashion has the highest return rate
+- Pareto analysis showing that a small number of products account for a large portion of losses
+- High-risk product flagging (100% return rate)
 
-This data model enables:
-
-- Revenue and return loss calculations  
-- Product-level and category-level performance analysis  
-- Customer behavior and risk segmentation  
-- Scalable and maintainable SQL queries  
-
----
+The clean relational structure made complex revenue leakage calculations efficient and reproducible.
