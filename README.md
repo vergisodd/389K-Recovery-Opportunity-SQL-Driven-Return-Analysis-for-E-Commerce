@@ -13,7 +13,7 @@ This project uses SQL end-to-end to quantify, locate, and prioritize revenue lea
 
 ## Dashboard Preview
 
-![E-Commerce Revenue Leakage Dashboard](docs/dashboard_preview.png)
+![E-Commerce Revenue Leakage Dashboard](dashboard/dashboard_preview.png)
 
 > Built in Power BI · Revenue overview · Customer risk segmentation · Product Pareto · Category breakdown
 
