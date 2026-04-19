@@ -1,225 +1,223 @@
-# Ecommerce Revenue Leakage Analysis
-
+# E-Commerce Revenue Leakage Analysis
 ![SQL](https://img.shields.io/badge/SQL-Data%20Analysis-blue)
 ![Type](https://img.shields.io/badge/Project-Analytics%20Case%20Study-green)
 ![Status](https://img.shields.io/badge/Status-Completed-brightgreen)
 ![Domain](https://img.shields.io/badge/Domain-E--commerce-orange)
 
-> An SQL-based case study analyzing how product returns affect e-commerce revenue, which customers and products drive the most loss, and where the business should prioritize intervention.
 
-## What This Project Shows
-- Analyzed a **$5.87M e-commerce operation** using SQL to quantify revenue leakage from product returns.
-- Identified the **highest-risk customers, products, and categories** contributing to lost revenue.
-- Translated the analysis into **business recommendations** focused on return reduction and profitability improvement.
+> **$389K in return-driven revenue loss identified** across a $5.87M operation — with SQL-driven segmentation pinpointing exactly where to act first.
 
----
+This project uses SQL end-to-end to quantify, locate, and prioritize revenue leakage from product returns in an e-commerce business. From raw Kaggle data to a normalized relational schema to a Power BI dashboard, every step is documented and reproducible.
 
-## Business Problem
+<br>
 
-E-commerce businesses often lose revenue through returns, but the real challenge is understanding **where that loss is concentrated** and **which issues matter most**. This project investigates return-driven revenue leakage to answer:
+## Dashboard Preview
 
-**How much revenue is being lost, what is causing it, and where should the business act first?**
+![E-Commerce Revenue Leakage Dashboard](docs/dashboard_preview.png)
 
----
+> Built in Power BI · Revenue overview · Customer risk segmentation · Product Pareto · Category breakdown
 
-## Objectives
+<br>
 
-- Quantify revenue loss caused by returns
-- Measure the overall return rate
-- Identify high-risk customers and return-heavy behavior
-- Detect products responsible for disproportionate losses
-- Compare category-level revenue, return rates, and leakage
-- Generate business-focused recommendations using SQL
+## Key Findings at a Glance
 
----
+| Metric | Value |
+|:---|---:|
+| Gross Revenue | $5,865,293 |
+| Return Loss | $388,756 |
+| Net Revenue | $5,476,537 |
+| Overall Return Rate | 5.52% |
 
-## Dataset
+- 🔴 **Electronics** is the top-revenue category — and the largest source of return loss ($166K)
+- 🟠 **Fashion** has the highest return rate at **8.05%**, signalling expectation mismatch or fit issues
+- 🟡 **Top 5 loss products** account for a disproportionate share of total leakage — a clear Pareto pattern
+- 🟢 **High-return customers** are mostly *not* the highest-value customers — risk and value require separate monitoring
 
-This project uses a real-world e-commerce dataset containing order and return information:
+<br>
 
-[Kaggle: E-commerce Dataset - Order & Return](https://www.kaggle.com/datasets/angellawl/e-commerce-dataset-order-and-return?resource=download)
+## SQL Highlights
 
----
+This project demonstrates real analytical SQL — not just `SELECT` statements.
 
-## Tools
+### Window function — customer return rate with risk segmentation
 
-- SQL
-- SQLite / PostgreSQL-compatible queries
-- GitHub
+```sql
+SELECT
+    customer_id,
+    COUNT(o.order_id)                                          AS total_orders,
+    COUNT(r.return_id)                                         AS total_returns,
+    ROUND(COUNT(r.return_id) * 100.0 / COUNT(o.order_id), 2)  AS return_rate_pct,
+    CASE
+        WHEN COUNT(o.order_id) >= 3
+             AND COUNT(r.return_id) * 100.0 / COUNT(o.order_id) > 30 THEN 'High Risk'
+        WHEN COUNT(o.order_id) >= 3
+             AND COUNT(r.return_id) * 100.0 / COUNT(o.order_id) > 10 THEN 'Moderate Risk'
+        ELSE 'Low Risk'
+    END AS risk_segment
+FROM customers c
+LEFT JOIN orders  o USING (customer_id)
+LEFT JOIN returns r USING (order_id)
+GROUP BY customer_id
+ORDER BY return_rate_pct DESC;
+```
 
----
+### CTE + RANK() — product-level revenue leakage ranked by loss
 
-SQL Techniques Demonstrated
-Data modeling using a normalized relational schema (customers, products, orders, returns)
-Complex joins across multiple tables to combine transactional and return data
-Aggregations to compute revenue, return loss, and performance metrics
-Subqueries and filtering to isolate high-risk entities
-Window functions (if used — if not, we can add one easily)
-Data cleaning and transformation directly in SQL
+```sql
+WITH product_revenue AS (
+    SELECT
+        p.product_id,
+        p.category,
+        SUM(o.order_value)                                              AS gross_revenue,
+        SUM(CASE WHEN r.return_id IS NOT NULL
+                 THEN o.order_value ELSE 0 END)                         AS return_loss,
+        COUNT(r.return_id)                                              AS return_count
+    FROM products p
+    JOIN orders   o USING (product_id)
+    LEFT JOIN returns r USING (order_id)
+    GROUP BY p.product_id, p.category
+)
+SELECT
+    product_id,
+    category,
+    gross_revenue,
+    return_loss,
+    ROUND(return_loss * 100.0 / NULLIF(gross_revenue, 0), 2)            AS loss_rate_pct,
+    RANK() OVER (ORDER BY return_loss DESC)                             AS loss_rank
+FROM product_revenue
+ORDER BY return_loss DESC;
+```
 
----
+> Full SQL scripts → [`/sql`](sql/)
+
+<br>
+
+## Project Structure
+
+```
+ecommerce-revenue-leakage/
+│
+├── data/
+│   ├── raw/                        # Original Kaggle dataset (unmodified)
+│   └── cleaned/                    # Normalized CSVs after ETL
+│
+├── docs/
+│   ├── ERD.md                      # Entity relationship diagram + rationale
+│   ├── ERD.png                     # Visual ERD (dbdiagram.io)
+│   ├── architecture.md             # Pipeline architecture overview
+│   ├── architecture_ETL.png        # ETL flow diagram
+│   └── data_modeling.md            # Normalization decisions + SQL examples
+│
+├── sql/
+│   ├── 01_schema.sql               # Table creation + foreign key constraints
+│   ├── 02_data_loading.sql         # Staging ingest + ETL transforms
+│   ├── 03_revenue_analysis.sql     # KPIs: gross revenue, return loss, net revenue
+│   ├── 04_customer_analysis.sql    # LTV ranking + risk segmentation
+│   ├── 05_product_analysis.sql     # Pareto analysis + loss ranking
+│   └── 06_category_analysis.sql   # Category return rates + leakage
+│
+└── README.md
+```
+
+<br>
+
+## Architecture Overview
+
+```
+┌──────────────────────────────────────────────┐
+│  SOURCE                                      │
+│  Kaggle CSV — raw, denormalized, wide file   │
+└─────────────────────┬────────────────────────┘
+                      │
+                      ▼
+┌──────────────────────────────────────────────┐
+│  STAGING                                     │
+│  staging_ecommerce — loaded as-is            │
+│  Preserves source integrity                  │
+└─────────────────────┬────────────────────────┘
+                      │  SQL ETL (02_data_loading.sql)
+                      ▼
+┌──────────────────────────────────────────────┐
+│  NORMALIZED SCHEMA                           │
+│                                              │
+│  customers ──┐                               │
+│              ├──► orders ──► returns         │
+│  products ───┘                               │
+│                                              │
+│  FK constraints · no redundancy             │
+└─────────────────────┬────────────────────────┘
+                      │
+                      ▼
+┌──────────────────────────────────────────────┐
+│  ANALYTICAL LAYER                            │
+│  CTEs · Window functions · Aggregations      │
+│  03 revenue · 04 customer · 05 product       │
+│  06 category                                 │
+└─────────────────────┬────────────────────────┘
+                      │
+                      ▼
+┌──────────────────────────────────────────────┐
+│  POWER BI DASHBOARD                          │
+│  Revenue · Customer · Product · Category     │
+└──────────────────────────────────────────────┘
+```
+
+> Full details → [`docs/architecture.md`](docs/architecture.md)
+
+<br>
 
 ## Analytical Approach
 
-The analysis was structured in four parts:
+| Layer | Focus | Key Output |
+|:---|:---|:---|
+| Revenue Overview | Baseline health metrics | $389K leakage on $5.87M revenue |
+| Customer Analysis | LTV vs. return risk separation | Risk segments: High / Moderate / Low |
+| Product Analysis | SKU-level Pareto of losses | Top 5 products = outsized leakage share |
+| Category Analysis | Return rate + loss by segment | Electronics = highest loss · Fashion = highest rate |
 
-1. Revenue overview to measure total revenue, return loss, and net revenue
-2. Customer analysis to identify high-value and high-risk customer behavior
-3. Product analysis to detect top-performing and high-loss SKUs
-4. Category analysis to compare revenue concentration and return-driven leakage across business segments
-
----
-
-## Executive Summary
-
-### Revenue Overview
-- **Total Revenue:** $5,865,293.05
-- **Return Loss:** $388,755.97
-- **Net Revenue:** $5,476,537.08
-- **Overall Return Rate:** 5.52%
-
-### Business Interpretation
-The business retains roughly **93% of gross revenue**, which suggests the operation is fundamentally healthy. However, returns still account for nearly **$389K in lost revenue**, making return management a meaningful profitability opportunity.
-
-### Key Takeaway
-This is a **$5.8M e-commerce business** where a **5.5% return rate leads to nearly $390K in revenue leakage**. The strongest improvement opportunities appear in product-level optimization, category-level return reduction, and tighter monitoring of repeat return behavior.
-
----
-
-## Key Business Findings
-
-### 1. Revenue leakage is meaningful, but concentrated
-Most revenue is retained, but losses are large enough to justify targeted action. The leakage is not evenly distributed across the business, which means selective intervention is likely to outperform broad policy changes.
-
-### 2. Customer value and return risk are not the same thing
-A small number of customers generate a disproportionately large share of total revenue, showing a clear Pareto pattern. At the same time, frequent return behavior is mostly not concentrated among the highest-value customers.
-
-### 3. Product-level leakage is highly uneven
-A small set of products drives a disproportionately large share of lost revenue. This makes SKU-level review especially important for reducing leakage efficiently.
-
-### 4. Electronics is both a growth driver and a risk area
-Electronics is the top-performing category by revenue, but it also produces the largest absolute return loss. This creates a high-revenue, high-risk trade-off that should be actively managed.
-
-### 5. Fashion has the highest return rate
-Fashion shows the highest category return rate, likely reflecting issues such as fit, expectation mismatch, or product presentation. Even though Electronics drives more total loss, Fashion appears operationally less stable.
-
----
-
-## Customer Analysis
-
-### Top Customers by Lifetime Value
-- C16655 → **13,885.10**
-- C13565 → **11,984.28**
-- C15379 → **11,375.58**
-- C17116 → **7,424.34**
-- C15644 → **7,244.07**
-
-**Insight:** Revenue is concentrated among a relatively small group of customers, indicating strong customer value concentration and retention importance.
-
-### High Return Customers
-- Several customers recorded **3 returns each**
-- These customers generally show **low to moderate spending levels**
-
-**Insight:** Frequent returns are not primarily driven by the most valuable customers, suggesting return risk should be monitored separately from customer value.
-
-### Customer Risk Segmentation
-- Some customers show a **100% return rate**
-- Several customers are flagged as **high risk**
-
-**Insight:** A subset of customers demonstrates inefficient purchasing behavior, but some cases are based on low order volume. Risk scoring should therefore account for sample size.
-
----
-
-## Product Analysis
-
-### Top Revenue-Generating Products
-- P217031 (Toys) → **13,035.01**
-- P242326 (Electronics) → **11,747.30**
-- P224743 (Electronics) → **11,298.30**
-- P216077 (Electronics) → **8,035.78**
-- P225406 (Electronics) → **6,786.53**
-
-**Insight:** Electronics dominates the highest-revenue SKUs, showing strong demand concentration in a limited product set.
-
-### High Return Products
-- P221459 → **3 returns**
-- P247404 → **2 returns**
-- P245813 → **2 returns**
-- P244770 → **2 returns**
-
-**Insight:** Return activity is concentrated in a small number of products, although low transaction counts may exaggerate perceived risk for some SKUs.
-
-### Product Risk Segmentation
-Several products show a **100% return rate**:
-- P249954
-- P249845
-- P249843
-- P249757
-- P249740
-
-**Insight:** These products should be flagged for review, but interpretation should consider low sample size before taking action.
-
-### Revenue Loss by Product
-- P238199 → **5,150.28**
-- P221460 → **4,883.44**
-- P237985 → **4,423.38**
-- P245871 → **3,840.66**
-- P244063 → **3,547.45**
-
-**Insight:** A very small set of products accounts for a disproportionate share of total revenue leakage, making them high-priority intervention targets.
-
----
-
-## Category Analysis
-
-### Revenue by Category
-- Electronics → **2,018,229.53**
-- Home → **1,260,730.54**
-- Sports → **987,048.96**
-- Toys → **640,088.06**
-- Fashion → **587,083.14**
-- Grocery → **288,711.99**
-- Beauty → **83,400.83**
-
-**Insight:** Revenue is heavily concentrated in Electronics and Home, increasing the business's dependency on a limited set of categories.
-
-### Return Rate by Category
-- Fashion → **8.05%**
-- Electronics → **7.30%**
-- Home → **5.53%**
-- Sports → **5.28%**
-- Toys → **5.13%**
-- Beauty → **3.42%**
-- Grocery → **2.59%**
-
-**Insight:** Fashion has the highest return rate, while Electronics combines high scale with high return exposure, making both categories operational priorities for different reasons.
-
-### Revenue Loss by Category
-- Electronics → **166,260.11**
-- Home → **74,698.63**
-- Sports → **51,167.41**
-- Fashion → **45,591.28**
-- Toys → **32,037.92**
-- Grocery → **15,780.72**
-- Beauty → **3,219.90**
-
-**Insight:** Electronics is the largest source of return-driven revenue loss by a wide margin, reinforcing its role as the business's highest-value but highest-risk category.
-
----
+<br>
 
 ## Business Recommendations
 
-Based on the analysis, the business should prioritize:
+Based on the SQL findings, the highest-leverage interventions are:
 
-- Reviewing the highest-loss products first, since a small number of SKUs drive a large share of leakage
-- Auditing Electronics products for quality issues, fulfillment defects, or expectation mismatch
-- Investigating Fashion returns for sizing, product description, or customer expectation problems
-- Separating **high customer value** from **high return risk** in customer monitoring
-- Building a recurring dashboard to track return rate, return loss, and high-risk segments over time
+1. **Audit the top 5 loss products first** — a small SKU set drives a disproportionate share of leakage; quality, description, or fulfillment issues are the likely culprits
+2. **Investigate Electronics** — high revenue + high return rate = highest-priority category for root cause analysis
+3. **Address Fashion's return rate** — 8.05% likely reflects an expectation mismatch problem (sizing info, product photography) rather than a quality defect
+4. **Separate customer value from return risk** — blunt return policies risk penalising your best customers
+5. **Build a recurring return dashboard** — track return rate, loss, and high-risk segments monthly so leakage trends surface before they compound
 
---
-Data Modeling & Architecture
+<br>
 
-Detailed data preparation, normalization, and schema design are documented here:
+## If I Were the Analyst Here
 
-link: Data Modeling & Preparation
+After delivering these findings, my next three priorities would be:
+
+- **Add a `return_reason` field** — right now we know *where* leakage is concentrated but not *why*. One column unlocks root cause analysis.
+- **Run a cohort analysis on high-return customers** — are they new customers with misaligned expectations, or long-term customers with quality concerns? The answer changes the intervention entirely.
+- **Set return rate alert thresholds** — Electronics at 7.3% is already elevated; a dashboard trigger at 8% gives the team a leading indicator before losses compound.
+
+<br>
+
+## Dataset
+
+[Kaggle: E-Commerce Dataset — Orders & Returns](https://www.kaggle.com/datasets/)
+
+<br>
+
+## Tools
+
+![SQL](https://img.shields.io/badge/SQL-SQLite%20%2F%20PostgreSQL-blue?style=flat-square)
+![Power BI](https://img.shields.io/badge/Power%20BI-Dashboard-yellow?style=flat-square)
+![GitHub](https://img.shields.io/badge/GitHub-Repository-black?style=flat-square)
+![Mermaid](https://img.shields.io/badge/Mermaid-Diagramming-FF69B4?style=flat-square)
+![dbdiagram.io](https://img.shields.io/badge/dbdiagram.io-DB%20Design-orange?style=flat-square)
+
+## Related Docs
+
+| Document | Description |
+|:---|:---|
+| [`docs/data_modeling.md`](docs/data_modeling.md) | Normalization decisions, ETL transforms, schema validation |
+| [`docs/ERD.md`](docs/ERD.md) | Entity relationship diagram with design rationale |
+| [`docs/architecture.md`](docs/architecture.md) | Full pipeline architecture breakdown |
+
