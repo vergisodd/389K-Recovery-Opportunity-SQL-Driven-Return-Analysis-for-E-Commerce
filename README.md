@@ -171,6 +171,16 @@ ecommerce-revenue-leakage/
 
 <br>
 
+## Data Validation
+
+All analytical results were validated through reconciliation checks:
+- Row counts across layers
+- Revenue totals before/after transformation
+- Return linkage consistency
+- Duplicate detection
+
+See: sql/07_data_validation.sql
+
 ## Analytical Approach
 
 | Layer | Focus | Key Output |
