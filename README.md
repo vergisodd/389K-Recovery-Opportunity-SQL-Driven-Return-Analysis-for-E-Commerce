@@ -421,12 +421,18 @@ From a business perspective, this indicates:
 
 ## If I Were the Analyst Here
 
-This analysis enables the business to:
+After delivering these findings, my next three priorities would be:
 
-- Prioritize high-impact products responsible for the majority of losses
-- Identify and manage high-risk customer segments
-- Improve retention by addressing early lifecycle drop-off
-- Shift from descriptive reporting to decision-driven analytics
+- **Add a `return_reason` field** — right now we know *where* leakage is
+concentrated but not *why*. One column unlocks root cause analysis and
+turns this from a measurement project into an actionable one.
+- **Run a cohort analysis on high-return customers** — are they new
+customers with misaligned expectations, or long-term customers with
+quality concerns? The answer changes the intervention entirely.
+- **Set return rate alert thresholds in the dashboard** — Electronics at
+7.3% is already elevated; a trigger at 8% gives the team a leading
+indicator before losses compound, shifting the response from reactive
+to proactive.
 
 <br>
 
