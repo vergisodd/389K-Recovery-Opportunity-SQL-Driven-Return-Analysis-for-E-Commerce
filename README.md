@@ -179,7 +179,7 @@ All analytical results were validated through reconciliation checks:
 - Return linkage consistency
 - Duplicate detection
 
-See: sql/07_data_validation.sql
+> Full details → [`sql/07_data_validation.sql`](sql/07_data_validation.sql)
 
 ## Analytical Approach
 
