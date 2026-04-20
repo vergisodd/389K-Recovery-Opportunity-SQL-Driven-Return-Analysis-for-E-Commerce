@@ -45,18 +45,24 @@ This project demonstrates advanced SQL for business analysis, including data val
    - 04_customer_analysis.sql
    - ... 10_time_analysis.sql
 
-## SQL Highlights
+## Key SQL Highlights
 
-This project demonstrates real analytical SQL — not just `SELECT` statements.
+This project demonstrates advanced analytical SQL, focusing on real business problems such as revenue leakage, customer risk behavior, and product-level loss prioritization.
 
-### Window function — customer return rate with risk segmentation
+Rather than simple aggregations, the queries below showcase window functions, CTE-based modeling, and business-driven segmentation logic.
+
+---
+
+### 1. Customer Return Risk Segmentation
+
+This query classifies customers based on their return behavior to identify high-risk users contributing disproportionately to return volume.
 
 ```sql
 SELECT
     customer_id,
-    COUNT(o.order_id)                                          AS total_orders,
-    COUNT(r.return_id)                                         AS total_returns,
-    ROUND(COUNT(r.return_id) * 100.0 / COUNT(o.order_id), 2)  AS return_rate_pct,
+    COUNT(o.order_id) AS total_orders,
+    COUNT(r.return_id) AS total_returns,
+    ROUND(COUNT(r.return_id) * 100.0 / COUNT(o.order_id), 2) AS return_rate_pct,
     CASE
         WHEN COUNT(o.order_id) >= 3
              AND COUNT(r.return_id) * 100.0 / COUNT(o.order_id) > 30 THEN 'High Risk'
@@ -65,25 +71,27 @@ SELECT
         ELSE 'Low Risk'
     END AS risk_segment
 FROM customers c
-LEFT JOIN orders  o USING (customer_id)
+LEFT JOIN orders o USING (customer_id)
 LEFT JOIN returns r USING (order_id)
 GROUP BY customer_id
 ORDER BY return_rate_pct DESC;
 ```
 
-### CTE + RANK() — product-level revenue leakage ranked by loss
+### 2. Product Revenue Leakage Ranking
 
 ```sql
 WITH product_revenue AS (
     SELECT
         p.product_id,
         p.category,
-        SUM(o.order_value)                                              AS gross_revenue,
-        SUM(CASE WHEN r.return_id IS NOT NULL
-                 THEN o.order_value ELSE 0 END)                         AS return_loss,
-        COUNT(r.return_id)                                              AS return_count
+        SUM(o.order_value) AS gross_revenue,
+        SUM(CASE 
+                WHEN r.return_id IS NOT NULL THEN o.order_value 
+                ELSE 0 
+            END) AS return_loss,
+        COUNT(r.return_id) AS return_count
     FROM products p
-    JOIN orders   o USING (product_id)
+    JOIN orders o USING (product_id)
     LEFT JOIN returns r USING (order_id)
     GROUP BY p.product_id, p.category
 )
@@ -92,14 +100,14 @@ SELECT
     category,
     gross_revenue,
     return_loss,
-    ROUND(return_loss * 100.0 / NULLIF(gross_revenue, 0), 2)            AS loss_rate_pct,
-    RANK() OVER (ORDER BY return_loss DESC)                             AS loss_rank
+    ROUND(return_loss * 100.0 / NULLIF(gross_revenue, 0), 2) AS loss_rate_pct,
+    RANK() OVER (ORDER BY return_loss DESC) AS loss_rank
 FROM product_revenue
 ORDER BY return_loss DESC;
 ```
-### SQL Deep Dive: Pareto Revenue Loss Analysis
+### 3. Pareto Revenue Loss Analysis (Deep Dive)
 
-One of the key analytical challenges in this project was identifying which products drive the majority of return-related revenue loss.
+This analysis identifies the small subset of products responsible for the majority of total return-related revenue loss using cumulative distribution logic.
 
 To solve this, I implemented a Pareto analysis using SQL window functions to rank products and calculate cumulative contribution to total loss.
 
