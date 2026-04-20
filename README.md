@@ -181,6 +181,16 @@ All analytical results were validated through reconciliation checks:
 
 > Full details → [`sql/07_data_validation.sql`](sql/07_data_validation.sql)
 
+## Join Pitfall Demonstration
+
+A naive join between orders and returns can inflate revenue due to duplication.
+
+This project demonstrates:
+- incorrect aggregation approach
+- corrected approach using deduplication
+
+> Full details → [`sql/09_join_pitfall_demo.sql`](sql/09_join_pitfall_demo.sql)
+
 ## Analytical Approach
 
 | Layer | Focus | Key Output |
