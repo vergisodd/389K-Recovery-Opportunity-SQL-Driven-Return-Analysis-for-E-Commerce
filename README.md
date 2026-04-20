@@ -391,6 +391,11 @@ reactivation represents genuine loyalty or seasonal coincidence.
 
 ## If I Were the Analyst Here
 
+> **If you read nothing else:** 35 customers average a 91% return rate,
+> Electronics alone accounts for $166K in loss, and we still don't know
+> *why* — because return reasons aren't captured. That's the single
+> highest-leverage gap in this dataset.
+
 After delivering these findings, my next three priorities would be:
 
 - **Add a `return_reason` field** — right now we know *where* leakage is
