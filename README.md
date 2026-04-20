@@ -307,52 +307,33 @@ This project demonstrates:
 
 <br>
 
-## Business Recommendations & Prioritization
+## Business Recommendations
 
-The goal of this analysis is not only to identify return-related revenue loss, but to prioritize actions that can maximize recovery with minimal effort.
+Based on the SQL findings, the highest-leverage interventions are:
 
-Using SQL-based analysis, key loss drivers were ranked based on their financial impact and return behavior.
+1. **Audit the top 5 loss products first** — a small SKU set drives a 
+disproportionate share of the $389K leakage; quality, fulfillment, or 
+description issues are the most likely culprits and the fastest path 
+to measurable recovery
 
-### Top Priorities
+2. **Investigate Electronics for defect or expectation issues** — at 
+$166K in return loss and a 7.3% return rate, this category is the 
+single largest lever; even a 2% reduction in return rate recovers 
+~$40K annually
 
-1. **Focus on High-Loss Products (Pareto Effect)**
-   - A small subset of products contributes to a large portion of total revenue loss.
-   - These products should be prioritized for investigation (quality issues, sizing, product mismatch).
+3. **Address Fashion's return rate through better product presentation** 
+— 8.05% is the highest category rate and most likely reflects sizing 
+information gaps or photography that misrepresents the product, not 
+a quality problem
 
-2. **Target High Return Rate Categories**
-   - Categories such as [replace with your actual category, e.g., Fashion] show significantly higher return rates.
-   - These may require changes in product descriptions, sizing guides, or customer expectations.
+4. **Separate customer value from return risk in monitoring** — the 
+analysis shows high-return customers are mostly not high-value 
+customers; a blanket return policy change would penalise your best 
+buyers to target a different group entirely
 
-3. **Investigate Repeat Return Behavior**
-   - Customers with multiple returns represent higher risk.
-   - Policies such as return limits or targeted interventions can reduce losses.
-
-4. **Monitor Return Trends Over Time**
-   - If return rates are increasing, this may indicate operational or product issues.
-   - Early detection allows proactive correction.
-  
-### Why This Prioritization Matters
-
-Not all returns have equal business impact.
-
-By focusing on:
-- high-value losses instead of all returns  
-- top-contributing products instead of all products  
-- repeat patterns instead of isolated cases  
-
-The business can allocate resources efficiently and achieve faster revenue recovery.
-
-These recommendations are directly supported by SQL analysis, including:
-- product-level loss ranking
-- return rate segmentation
-- cumulative contribution (Pareto analysis)
-
-### Strategic Recommendation
-
-The most effective path to reducing revenue loss is prioritization, not uniform optimization.
-
-Focusing on the top contributors to loss (products and customers) will yield significantly higher ROI than attempting to reduce return rates across the entire catalog.
-
+5. **Build a recurring return dashboard** — track return rate and return 
+loss monthly by category and SKU so trends surface before they 
+compound; Electronics at 7.3% already warrants a standing alert
 <br>
 
 ## Customer Behavior Analysis
