@@ -386,25 +386,8 @@ annual repeat-buyer segment. Short-term month-1 retention
 assess mid-term retention or determine whether the 12-month 
 reactivation represents genuine loyalty or seasonal coincidence.
 
+> Full cohort analysis → [`sql/12_cohort_analysis.sql`](sql/12_cohort_analysis.sql)
 
-### Business Implications
-
-Retention drops sharply after month 1 and stabilizes at a low baseline, indicating structurally weak repeat purchase behavior.
-
-From a business perspective, this indicates:
-
-- Limited long-term customer value (low repeat behavior)
-- High dependency on acquiring new customers instead of retaining existing ones
-- Potential issues in product satisfaction or post-purchase experience
-
-
-### Recommended Actions
-
-- Improve post-purchase engagement (email flows, recommendations, follow-ups)
-- Investigate early-stage customer experience issues
-- Focus on increasing second-purchase conversion rate (critical retention milestone)
-
-> Full cohort analysis SQL available in  → [``/sql/12_cohort_analysis.sql``](`/sql/12_cohort_analysis.sql`)
 
 ## If I Were the Analyst Here
 
