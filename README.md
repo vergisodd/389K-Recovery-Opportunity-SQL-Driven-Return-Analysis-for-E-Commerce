@@ -281,15 +281,45 @@ This project demonstrates:
 
 <br>
 
-## Business Recommendations
+## Business Recommendations & Prioritization
 
-Based on the SQL findings, the highest-leverage interventions are:
+The goal of this analysis is not only to identify return-related revenue loss, but to prioritize actions that can maximize recovery with minimal effort.
 
-1. **Audit the top 5 loss products first** — a small SKU set drives a disproportionate share of leakage; quality, description, or fulfillment issues are the likely culprits
-2. **Investigate Electronics** — high revenue + high return rate = highest-priority category for root cause analysis
-3. **Address Fashion's return rate** — 8.05% likely reflects an expectation mismatch problem (sizing info, product photography) rather than a quality defect
-4. **Separate customer value from return risk** — blunt return policies risk penalising your best customers
-5. **Build a recurring return dashboard** — track return rate, loss, and high-risk segments monthly so leakage trends surface before they compound
+Using SQL-based analysis, key loss drivers were ranked based on their financial impact and return behavior.
+
+### Top Priorities
+
+1. **Focus on High-Loss Products (Pareto Effect)**
+   - A small subset of products contributes to a large portion of total revenue loss.
+   - These products should be prioritized for investigation (quality issues, sizing, product mismatch).
+
+2. **Target High Return Rate Categories**
+   - Categories such as [replace with your actual category, e.g., Fashion] show significantly higher return rates.
+   - These may require changes in product descriptions, sizing guides, or customer expectations.
+
+3. **Investigate Repeat Return Behavior**
+   - Customers with multiple returns represent higher risk.
+   - Policies such as return limits or targeted interventions can reduce losses.
+
+4. **Monitor Return Trends Over Time**
+   - If return rates are increasing, this may indicate operational or product issues.
+   - Early detection allows proactive correction.
+  
+### Why This Prioritization Matters
+
+Not all returns have equal business impact.
+
+By focusing on:
+- high-value losses instead of all returns  
+- top-contributing products instead of all products  
+- repeat patterns instead of isolated cases  
+
+The business can allocate resources efficiently and achieve faster revenue recovery.
+
+These recommendations are directly supported by SQL analysis, including:
+- product-level loss ranking
+- return rate segmentation
+- cumulative contribution (Pareto analysis)
 
 <br>
 
