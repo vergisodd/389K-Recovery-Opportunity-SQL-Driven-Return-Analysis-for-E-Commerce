@@ -28,6 +28,12 @@ This analysis addresses the following questions:
 
 ## Executive Summary
 
+This project analyzes e-commerce return behavior and identifies the primary drivers of $389K+ in revenue loss using SQL-based analytical modeling.
+
+Across product, customer, and time dimensions, the analysis reveals a highly concentrated loss structure where a small subset of products and customer behaviors account for a disproportionate share of financial impact.
+
+The key finding is that revenue leakage is not random; it is structurally concentrated and predictable using historical return patterns.
+
 | Metric | Value |
 |:---|---:|
 | Gross Revenue | $5,865,293 |
@@ -35,12 +41,17 @@ This analysis addresses the following questions:
 | Net Revenue | $5,476,537 |
 | Overall Return Rate | 5.52% |
 
-The analysis shows that revenue loss is highly concentrated in a small subset of products and customers, following a clear Pareto distribution.
+### Key Findings
 
 - 🔴 **Electronics** is the top-revenue category — and the largest source of return loss ($166K)
 - 🟠 **Fashion** has the highest return rate at **8.05%**, signalling expectation mismatch or fit issues
-- 🟡 **Top 5 loss products** account for a disproportionate share of total leakage — a clear Pareto pattern
+- 🟡 **Top 5 loss products** account for a disproportionate share of total leakage
 - 🟢 **High-return customers** are mostly *not* the highest-value customers — risk and value require separate monitoring
+
+- Approximately 80% of return-related revenue loss is concentrated in a small subset of products (Pareto distribution)
+- Customer return behavior can be segmented into distinct risk tiers, with a small group of users responsible for repeated losses
+- Retention declines sharply after the first purchase cycle, indicating weak long-term customer engagement
+- Product categories with high return rates suggest structural issues such as expectation mismatch, quality inconsistency, or sizing problems
 
 <br>
 
@@ -335,6 +346,12 @@ These recommendations are directly supported by SQL analysis, including:
 - return rate segmentation
 - cumulative contribution (Pareto analysis)
 
+### Strategic Recommendation
+
+The most effective path to reducing revenue loss is prioritization, not uniform optimization.
+
+Focusing on the top contributors to loss (products and customers) will yield significantly higher ROI than attempting to reduce return rates across the entire catalog.
+
 <br>
 
 ## Customer Behavior Analysis
@@ -372,7 +389,7 @@ It helps answer a key business question:
 
 ### Business Implications
 
-This pattern suggests that customer retention is weak and one-time or short-term purchases drive most revenue.
+Retention drops sharply after month 1 and stabilizes at a low baseline, indicating structurally weak repeat purchase behavior.
 
 From a business perspective, this indicates:
 
