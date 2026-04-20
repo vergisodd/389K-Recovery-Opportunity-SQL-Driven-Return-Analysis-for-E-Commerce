@@ -373,19 +373,32 @@ This segmentation allows the business to:
 - Apply targeted policies (e.g., return limits or review flags)  
 - Reduce loss from repeat return patterns
 
-## Cohort Analysis (Customer Retention Over Time)
+## Cohort Analysis — Repeat Purchase Behavior
 
-This analysis groups customers by their first purchase month (cohort) and tracks how their activity evolves over time.
+This analysis groups customers by first purchase month and tracks 
+return activity over time.
 
-It helps answer a key business question:
+**Important data context:** The dataset contains orders from 
+Oct–Dec 2023 and Oct–Dec 2024 only. Months 3–9 are absent from 
+the data, so this analysis measures long-term reactivation 
+rather than continuous retention.
 
-> Do customers keep returning after their first purchase, or does engagement drop quickly?
+| Cohort | Month 0 Customers | Month 1 Return Rate | ~12-Month Return Rate |
+|:---|---:|---:|---:|
+| Oct 2023 | 961 | 11.2% | 12.3% |
+| Nov 2023 | 795 | 12.1% | 13.7% |
+| Dec 2023 | 795 | — | 12.6% |
+| Oct 2024 | 700 | 11.7% | — |
 
-### Key Findings
+**Key finding:** Approximately 11–13% of customers reactivate 
+~12 months after their first purchase, suggesting a meaningful 
+annual repeat-buyer segment. Short-term month-1 retention 
+(~12%) is consistent across cohorts.
 
-- Most cohorts show a sharp drop in activity after the first month
-- Retention stabilizes at a low baseline rather than recovering over time
-- No strong evidence of long-term engagement growth across cohorts
+**Honest limitation:** Without data for months 2–9, we cannot 
+assess mid-term retention or determine whether the 12-month 
+reactivation represents genuine loyalty or seasonal coincidence.
+
 
 ### Business Implications
 
