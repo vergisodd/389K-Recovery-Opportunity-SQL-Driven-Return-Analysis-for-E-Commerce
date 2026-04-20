@@ -352,25 +352,36 @@ This segmentation allows the business to:
 
 ## Cohort Analysis (Customer Retention Over Time)
 
-To understand long-term customer behavior, a cohort analysis was conducted by month of first purchase.
+This analysis groups customers by their first purchase month (cohort) and tracks how their activity evolves over time.
 
-Customers were grouped into cohorts and tracked over time to measure retention and repeat activity.
+It helps answer a key business question:
 
-For each cohort:
-- Month 0 represents the first purchase
-- Subsequent months track continued activity
-- Active customers are counted per cohort over time
+> Do customers keep returning after their first purchase, or does engagement drop quickly?
 
-This analysis helps identify:
+### Key Findings
 
-- Whether customer engagement declines over time  
-- Which cohorts retain better  
-- Patterns in repeat purchasing behavior  
+- Most cohorts show a sharp drop in activity after the first month
+- Retention stabilizes at a low baseline rather than recovering over time
+- No strong evidence of long-term engagement growth across cohorts
 
-Understanding retention is critical for evaluating long-term business health beyond one-time transactions.
+### Business Implications
 
-Key Insight:
-If customer activity drops significantly after Month 1, it suggests low retention and potential issues in product satisfaction or customer experience.
+This pattern suggests that customer retention is weak and one-time or short-term purchases drive most revenue.
+
+From a business perspective, this indicates:
+
+- Limited long-term customer value (low repeat behavior)
+- High dependency on acquiring new customers instead of retaining existing ones
+- Potential issues in product satisfaction or post-purchase experience
+
+
+### Recommended Actions
+
+- Improve post-purchase engagement (email flows, recommendations, follow-ups)
+- Investigate early-stage customer experience issues
+- Focus on increasing second-purchase conversion rate (critical retention milestone)
+
+> Full cohort analysis SQL available in  → [``/sql/12_cohort_analysis.sql``](`/sql/12_cohort_analysis.sql`)
 
 ## If I Were the Analyst Here
 
