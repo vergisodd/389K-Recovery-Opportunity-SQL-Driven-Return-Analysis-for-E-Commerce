@@ -225,15 +225,40 @@ ecommerce-revenue-leakage/
 
 <br>
 
-## Data Validation
+## Data Validation & Integrity Checks
 
-All analytical results were validated through reconciliation checks:
-- Row counts across layers
-- Revenue totals before/after transformation
-- Return linkage consistency
-- Duplicate detection
+Ensuring data accuracy was a critical part of this project.
 
-> Full details → [`sql/07_data_validation.sql`](sql/07_data_validation.sql)
+Before performing any analysis, multiple validation checks were implemented to confirm that transformations did not introduce errors or inconsistencies.
+
+These checks ensure that all reported metrics (revenue, return rate, loss) are reliable and reconciled across data layers.
+
+### Validation Checks Performed
+
+- Row count reconciliation between raw and transformed tables  
+- Duplicate detection on order-level data  
+- Revenue reconciliation before and after transformation  
+- Referential integrity between orders and returns  
+- Null and missing value checks in key fields
+
+### Example: Revenue Reconciliation Check
+
+```sql
+-- Total revenue before cleaning
+SELECT SUM(order_value) 
+FROM staging_ecommerce;
+
+-- Total revenue after transformation
+SELECT SUM(total_amount) 
+FROM orders;
+```
+This check ensures that no revenue is lost or artificially introduced during the transformation process.
+
+Matching totals confirm that aggregation and normalization steps preserve financial accuracy.
+
+These validation steps ensure that all downstream analysis is based on consistent, accurate, and trustworthy data.
+
+> All validation queries are documented in: → [`sql/07_data_validation.sql`](sql/07_data_validation.sql)
 
 ## Join Pitfall Demonstration
 
