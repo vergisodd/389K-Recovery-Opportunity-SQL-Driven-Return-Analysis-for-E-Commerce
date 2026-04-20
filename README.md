@@ -35,6 +35,16 @@ This project uses SQL end-to-end to quantify, locate, and prioritize revenue lea
 
 <br>
 
+## How to Run This Project
+
+1. Create database
+2. Run: sql/01_schema.sql
+3. Load data using: sql/02_data_loading.sql
+4. Run analysis files in order:
+   - 03_revenue_analysis.sql
+   - 04_customer_analysis.sql
+   - ... 10_time_analysis.sql
+
 ## SQL Highlights
 
 This project demonstrates real analytical SQL — not just `SELECT` statements.
