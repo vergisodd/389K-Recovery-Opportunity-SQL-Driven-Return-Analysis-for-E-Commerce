@@ -43,16 +43,16 @@ means selective intervention will outperform broad policy changes.
 
 ### Key Findings
 
-- 🔴 **Electronics** generates the most revenue — and the most return 
+- 🔴 **Electronics** generates the most revenue; and the most return 
 loss ($166K), creating a high-value, high-risk trade-off that needs 
 active management
 - 🟠 **Fashion** has the highest return rate at **8.05%**, likely driven 
 by expectation mismatch rather than product defects
 - 🟡 **Top 5 loss products** account for a disproportionate share of 
-total leakage — a clear Pareto pattern that makes SKU-level review the 
+total leakage; a clear Pareto pattern that makes SKU-level review the 
 highest-leverage starting point
 - 🟢 **High-return customers** are mostly *not* the highest-value 
-customers — risk and value must be monitored separately to avoid 
+customers; risk and value must be monitored separately to avoid 
 penalising your best buyers
 
 <br>
