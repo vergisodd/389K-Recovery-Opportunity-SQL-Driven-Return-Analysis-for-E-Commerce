@@ -1,13 +1,20 @@
-# E-Commerce Revenue Leakage Analysis
+# 389K Revenue Recovery Analysis — SQL-Driven E-Commerce Returns Investigation
+
 ![SQL](https://img.shields.io/badge/SQL-Data%20Analysis-blue)
 ![Type](https://img.shields.io/badge/Project-Analytics%20Case%20Study-green)
 ![Status](https://img.shields.io/badge/Status-Completed-brightgreen)
 ![Domain](https://img.shields.io/badge/Domain-E--commerce-orange)
 
+## Business Problem
 
 > **$389K in return-driven revenue loss identified** across a $5.87M operation — with SQL-driven segmentation pinpointing exactly where to act first.
 
-This project demonstrates advanced SQL for business analysis, including data validation, revenue reconciliation, window-function-based prioritization, and join correctness handling.
+This analysis addresses the following questions:
+
+- Where is revenue being lost due to returns?
+- Which products and customers contribute most to financial impact?
+- Is return behavior concentrated or evenly distributed?
+- How can the business prioritize actions for maximum impact?
 
 <br>
 
@@ -19,7 +26,7 @@ This project demonstrates advanced SQL for business analysis, including data val
 
 <br>
 
-## Key Findings at a Glance
+## Executive Summary
 
 | Metric | Value |
 |:---|---:|
@@ -27,6 +34,8 @@ This project demonstrates advanced SQL for business analysis, including data val
 | Return Loss | $388,756 |
 | Net Revenue | $5,476,537 |
 | Overall Return Rate | 5.52% |
+
+The analysis shows that revenue loss is highly concentrated in a small subset of products and customers, following a clear Pareto distribution.
 
 - 🔴 **Electronics** is the top-revenue category — and the largest source of return loss ($166K)
 - 🟠 **Fashion** has the highest return rate at **8.05%**, signalling expectation mismatch or fit issues
@@ -233,21 +242,18 @@ ecommerce-revenue-leakage/
 
 <br>
 
-## Data Validation & Integrity Checks
+## Data Integrity and Validation
 
-Ensuring data accuracy was a critical part of this project.
+All analytical outputs are supported by validation steps to ensure accuracy and consistency:
 
-Before performing any analysis, multiple validation checks were implemented to confirm that transformations did not introduce errors or inconsistencies.
-
-These checks ensure that all reported metrics (revenue, return rate, loss) are reliable and reconciled across data layers.
-
-### Validation Checks Performed
-
-- Row count reconciliation between raw and transformed tables  
-- Duplicate detection on order-level data  
-- Revenue reconciliation before and after transformation  
-- Referential integrity between orders and returns  
+- Row count reconciliation across data layers
+- Duplicate detection in transactional records
+- Revenue consistency checks before and after transformation
+- Referential integrity validation between orders and returns
 - Null and missing value checks in key fields
+
+These checks ensure that all metrics are reliable and reproducible.
+
 
 ### Example: Revenue Reconciliation Check
 
@@ -385,11 +391,12 @@ From a business perspective, this indicates:
 
 ## If I Were the Analyst Here
 
-After delivering these findings, my next three priorities would be:
+This analysis enables the business to:
 
-- **Add a `return_reason` field** — right now we know *where* leakage is concentrated but not *why*. One column unlocks root cause analysis.
-- **Run a cohort analysis on high-return customers** — are they new customers with misaligned expectations, or long-term customers with quality concerns? The answer changes the intervention entirely.
-- **Set return rate alert thresholds** — Electronics at 7.3% is already elevated; a dashboard trigger at 8% gives the team a leading indicator before losses compound.
+- Prioritize high-impact products responsible for the majority of losses
+- Identify and manage high-risk customer segments
+- Improve retention by addressing early lifecycle drop-off
+- Shift from descriptive reporting to decision-driven analytics
 
 <br>
 
