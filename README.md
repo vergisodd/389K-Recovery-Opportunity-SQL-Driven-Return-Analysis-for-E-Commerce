@@ -97,10 +97,54 @@ SELECT
 FROM product_revenue
 ORDER BY return_loss DESC;
 ```
+### SQL Deep Dive: Pareto Revenue Loss Analysis
+
+One of the key analytical challenges in this project was identifying which products drive the majority of return-related revenue loss.
+
+To solve this, I implemented a Pareto analysis using SQL window functions to rank products and calculate cumulative contribution to total loss.
+
+This allows the business to prioritize high-impact products rather than treating all returns equally.
+
+```sql
+WITH product_loss AS (
+    SELECT 
+        p.product_name,
+        SUM(o.total_amount) AS total_loss
+    FROM returns r
+    JOIN orders o 
+        ON r.order_id = o.order_id
+    JOIN products p 
+        ON o.product_id = p.product_id
+    GROUP BY p.product_name
+),
+ranked AS (
+    SELECT 
+        product_name,
+        total_loss,
+        SUM(total_loss) OVER () AS total_loss_all,
+        SUM(total_loss) OVER (ORDER BY total_loss DESC) AS cumulative_loss
+    FROM product_loss
+)
+SELECT 
+    product_name,
+    total_loss,
+    cumulative_loss,
+    cumulative_loss / total_loss_all AS cumulative_pct
+FROM ranked
+ORDER BY total_loss DESC;
+```
 
 > Full SQL scripts → [`/sql`](sql/)
 
+This query demonstrates:
+
+- Window functions for cumulative analysis
+- Ranking logic for prioritization
+- Translation of raw data into business decision-making
+
+Using this approach, the business can identify the small subset of products responsible for the majority of losses (Pareto principle).
 <br>
+
 
 ## Project Structure
 
