@@ -28,9 +28,8 @@ This analysis addresses the following questions:
 
 ## Executive Summary
 
-This project uses SQL to identify and prioritize $389K in return-driven 
-revenue loss across a $5.87M e-commerce operation. The core finding is 
-that leakage is not evenly distributed — it is structurally concentrated 
+The core finding is 
+that leakage is not evenly distributed; it is structurally concentrated 
 in a small set of products, categories, and customer behaviors, which 
 means selective intervention will outperform broad policy changes.
 
