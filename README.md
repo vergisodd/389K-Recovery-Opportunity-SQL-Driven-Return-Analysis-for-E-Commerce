@@ -28,11 +28,11 @@ This analysis addresses the following questions:
 
 ## Executive Summary
 
-This project analyzes e-commerce return behavior and identifies the primary drivers of $389K+ in revenue loss using SQL-based analytical modeling.
-
-Across product, customer, and time dimensions, the analysis reveals a highly concentrated loss structure where a small subset of products and customer behaviors account for a disproportionate share of financial impact.
-
-The key finding is that revenue leakage is not random; it is structurally concentrated and predictable using historical return patterns.
+This project uses SQL to identify and prioritize $389K in return-driven 
+revenue loss across a $5.87M e-commerce operation. The core finding is 
+that leakage is not evenly distributed — it is structurally concentrated 
+in a small set of products, categories, and customer behaviors, which 
+means selective intervention will outperform broad policy changes.
 
 | Metric | Value |
 |:---|---:|
@@ -43,15 +43,17 @@ The key finding is that revenue leakage is not random; it is structurally concen
 
 ### Key Findings
 
-- 🔴 **Electronics** is the top-revenue category — and the largest source of return loss ($166K)
-- 🟠 **Fashion** has the highest return rate at **8.05%**, signalling expectation mismatch or fit issues
-- 🟡 **Top 5 loss products** account for a disproportionate share of total leakage
-- 🟢 **High-return customers** are mostly *not* the highest-value customers — risk and value require separate monitoring
-
-- Approximately 80% of return-related revenue loss is concentrated in a small subset of products (Pareto distribution)
-- Customer return behavior can be segmented into distinct risk tiers, with a small group of users responsible for repeated losses
-- Retention declines sharply after the first purchase cycle, indicating weak long-term customer engagement
-- Product categories with high return rates suggest structural issues such as expectation mismatch, quality inconsistency, or sizing problems
+- 🔴 **Electronics** generates the most revenue — and the most return 
+loss ($166K), creating a high-value, high-risk trade-off that needs 
+active management
+- 🟠 **Fashion** has the highest return rate at **8.05%**, likely driven 
+by expectation mismatch rather than product defects
+- 🟡 **Top 5 loss products** account for a disproportionate share of 
+total leakage — a clear Pareto pattern that makes SKU-level review the 
+highest-leverage starting point
+- 🟢 **High-return customers** are mostly *not* the highest-value 
+customers — risk and value must be monitored separately to avoid 
+penalising your best buyers
 
 <br>
 
