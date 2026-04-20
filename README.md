@@ -342,6 +342,28 @@ This segmentation allows the business to:
 - Apply targeted policies (e.g., return limits or review flags)  
 - Reduce loss from repeat return patterns
 
+## Cohort Analysis (Customer Retention Over Time)
+
+To understand long-term customer behavior, a cohort analysis was conducted by month of first purchase.
+
+Customers were grouped into cohorts and tracked over time to measure retention and repeat activity.
+
+For each cohort:
+- Month 0 represents the first purchase
+- Subsequent months track continued activity
+- Active customers are counted per cohort over time
+
+This analysis helps identify:
+
+- Whether customer engagement declines over time  
+- Which cohorts retain better  
+- Patterns in repeat purchasing behavior  
+
+Understanding retention is critical for evaluating long-term business health beyond one-time transactions.
+
+Key Insight:
+If customer activity drops significantly after Month 1, it suggests low retention and potential issues in product satisfaction or customer experience.
+
 ## If I Were the Analyst Here
 
 After delivering these findings, my next three priorities would be:
