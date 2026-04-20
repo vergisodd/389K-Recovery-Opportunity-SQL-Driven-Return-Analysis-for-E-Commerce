@@ -323,6 +323,25 @@ These recommendations are directly supported by SQL analysis, including:
 
 <br>
 
+## Customer Behavior Analysis
+
+To better understand return patterns, customers were segmented based on their return behavior.
+
+This analysis identifies high-risk customer groups who contribute disproportionately to return-related losses.
+
+Using SQL, customers were classified into risk segments based on their return rate:
+
+- No Returns
+- Low Risk
+- Moderate Risk
+- High Risk
+
+This segmentation allows the business to:
+
+- Identify customers with consistently high return behavior  
+- Apply targeted policies (e.g., return limits or review flags)  
+- Reduce loss from repeat return patterns
+
 ## If I Were the Analyst Here
 
 After delivering these findings, my next three priorities would be:
