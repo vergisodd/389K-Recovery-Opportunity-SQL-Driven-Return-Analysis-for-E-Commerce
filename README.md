@@ -336,24 +336,29 @@ loss monthly by category and SKU so trends surface before they
 compound; Electronics at 7.3% already warrants a standing alert
 <br>
 
-## Customer Behavior Analysis
+## Customer Risk Segmentation
 
-To better understand return patterns, customers were segmented based on their return behavior.
+Customers were classified into four risk tiers based on return rate 
+and order volume:
 
-This analysis identifies high-risk customer groups who contribute disproportionately to return-related losses.
+| Segment | Customers | Avg Return Rate | Business Implication |
+|:---|---:|---:|:---|
+| High Risk | 35 | 91.2% | Likely systematic — warrants individual review |
+| Moderate Risk | 741 | 33.6% | Repeat returners — monitor for policy intervention |
+| Low Risk | 940 | 16.3% | Occasional returners — normal behavior |
+| No Returns | 6,187 | 0% | 78% of the customer base — return problem is concentrated |
 
-Using SQL, customers were classified into risk segments based on their return rate:
+**Key insight:** The High Risk segment is only 35 customers but 
+averages a 91% return rate — meaning nearly everything they order 
+comes back. This is almost certainly not random; it suggests 
+wardrobing behavior or a systemic expectation mismatch for a 
+specific customer profile. These 35 accounts warrant individual 
+review before any broad return policy change is implemented.
 
-- No Returns
-- Low Risk
-- Moderate Risk
-- High Risk
-
-This segmentation allows the business to:
-
-- Identify customers with consistently high return behavior  
-- Apply targeted policies (e.g., return limits or review flags)  
-- Reduce loss from repeat return patterns
+**Why this matters for policy:** 78% of customers have never made 
+a return. A blanket policy tightening would burden the vast 
+majority of well-behaved customers to address the behavior of 
+less than 1% of the base.
 
 ## Cohort Analysis — Repeat Purchase Behavior
 
