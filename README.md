@@ -7,7 +7,7 @@
 
 > **$389K in return-driven revenue loss identified** across a $5.87M operation — with SQL-driven segmentation pinpointing exactly where to act first.
 
-This project uses SQL end-to-end to quantify, locate, and prioritize revenue leakage from product returns in an e-commerce business. From raw Kaggle data to a normalized relational schema to a Power BI dashboard, every step is documented and reproducible.
+This project demonstrates advanced SQL for business analysis, including data validation, revenue reconciliation, window-function-based prioritization, and join correctness handling.
 
 <br>
 
