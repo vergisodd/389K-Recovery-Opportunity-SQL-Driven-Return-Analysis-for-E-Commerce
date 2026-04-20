@@ -42,7 +42,7 @@ means selective intervention will outperform broad policy changes.
 
 ### Key Findings
 
-- 🔴 **Electronics** generates the most revenue; and the most return 
+- 🔴 **Electronics** generates the most revenue and the most return 
 loss ($166K), creating a high-value, high-risk trade-off that needs 
 active management
 - 🟠 **Fashion** has the highest return rate at **8.05%**, likely driven 
