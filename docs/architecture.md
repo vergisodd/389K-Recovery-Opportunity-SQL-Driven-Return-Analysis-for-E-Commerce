@@ -20,8 +20,9 @@
 │  ETL LAYER                                                  │
 │  • Date standardization                                     │
 │  • Column type casting                                      │
-│  • Derived field calculation (return_loss, net_revenue)     │
-│  • Deduplication and null handling                          │
+│  • Deduplication via ROW_NUMBER()                           │
+│  • Category conflict resolution (modal + tie-breaker)       │
+│  • Null handling for sparse return fields                   │
 └─────────────────────────────┬───────────────────────────────┘
                               │
                               ▼
@@ -36,10 +37,9 @@
 ┌─────────────────────────────────────────────────────────────┐
 │  ANALYTICAL LAYER                                           │
 │  SQL scripts using CTEs, window functions, aggregations     │
-│  03_revenue_analysis.sql  — KPIs and leakage totals         │
-│  04_customer_analysis.sql — LTV ranking, risk segmentation  │
-│  05_product_analysis.sql  — Pareto, loss ranking, flagging  │
-│  06_category_analysis.sql — Category return rates and loss  │
+│  03 revenue · 04 customer · 05 product · 06 category        │
+│  10 time · 11 behavior · 12 cohort                          │
+│  13 return reason · 14 profit margin                        │
 └─────────────────────────────┬───────────────────────────────┘
                               │
                               ▼
@@ -73,12 +73,9 @@ Staging decouples ingestion from transformation. If a transform has to be rolled
 Also handled in `02_data_loading.sql`, the ETL step performs:
 
 - Date parsing and standardization to `YYYY-MM-DD`
-- Numeric type casting for `order_value` and `unit_price`
-- Derivation of `return_loss` (order value × return flag) and `net_revenue`
-- Deduplication of any duplicate order records
+- Deduplication of duplicate order and return records using `ROW_NUMBER()`
+- Category conflict resolution using modal value with alphabetical tie-breaker
 - Null handling for missing return fields (left as NULL rather than zero to avoid distorting aggregations)
-
-All transformations are written in standard SQL compatible with both SQLite and PostgreSQL.
 
 ### 4. Normalized Layer
 
@@ -88,18 +85,21 @@ See [`docs/ERD.md`](ERD.md) for the full schema, relationship definitions, and d
 
 ### 5. Analytical Layer
 
-Four SQL scripts perform the analysis, each building on the normalized schema:
-
 | Script | Purpose | Key Techniques |
-|---|---|---|
+|:---|:---|:---|
 | `03_revenue_analysis.sql` | Gross revenue, return loss, net revenue, return rate | Aggregation, conditional SUM |
 | `04_customer_analysis.sql` | LTV ranking, return frequency, risk segmentation | LEFT JOIN, CASE, GROUP BY |
-| `05_product_analysis.sql` | Revenue by SKU, loss ranking, 100%-return flagging | CTE, RANK() window function |
+| `05_product_analysis.sql` | Revenue by SKU, loss ranking, risk classification | CTE, RANK() window function |
 | `06_category_analysis.sql` | Revenue, return rate, and loss by category | Multi-level aggregation, JOIN chain |
+| `10_time_analysis.sql` | Monthly revenue, return loss, and return rate trends | GROUP BY date, COALESCE |
+| `11_customer_behavior_analysis.sql` | Behavioral risk and financial impact segmentation | NTILE(), CASE, filtered CTE |
+| `12_cohort_analysis.sql` | Repeat purchase retention by cohort month | MIN(), date arithmetic, month-0 exclusion |
+| `13_return_reason_analysis.sql` | Return reason by volume, category, region, and segment | Window functions, PARTITION BY, CASE |
+| `14_profit_margin_analysis.sql` | True economic cost of returns including margin and shipping | Multi-column aggregation, margin banding |
 
 ### 6. Insight Layer
 
-Results are visualized in a Power BI dashboard covering four pages: revenue overview, customer analysis, product analysis, and category analysis. The dashboard is designed to surface the same four-layer structure as the SQL analysis, making findings traceable back to specific queries.
+Results are visualized in a Power BI dashboard covering revenue overview, customer analysis, product analysis, and category analysis. The dashboard is designed to surface the same layered structure as the SQL analysis, making findings traceable back to specific queries.
 
 ---
 
@@ -109,7 +109,23 @@ Results are visualized in a Power BI dashboard covering four pages: revenue over
 
 **Layered separation.** Each layer has a single responsibility. Source data is never modified. Staging is never used for analysis. The normalized schema is the single source of truth for all analytical queries.
 
-**Scalable by design.** The normalized schema supports extension without restructuring — adding a `return_reason` column to `returns`, a `region` dimension to `customers`, or a time-series layer for trend analysis requires no changes to the existing joins or queries.
+**Scalable by design.** The normalized schema supports extension without restructuring — adding new dimensions, time-series layers, or additional analytical scripts requires no changes to the existing joins or schema.
 
 **Reproducible.** Running `01_schema.sql` → `02_data_loading.sql` → any analysis script in order produces the same results from the same source data every time.
 
+---
+
+## SQLite-Specific Functions
+
+This project is written for **SQLite**. The following functions are used in the ETL and analytical layers that are SQLite-specific and would require substitution when porting to another database engine:
+
+| SQLite Function | Purpose | PostgreSQL Equivalent |
+|:---|:---|:---|
+| `strftime('%Y-%m', date)` | Date formatting for grouping | `TO_CHAR(date, 'YYYY-MM')` |
+| `printf('%04d-%02d-%02d', y, m, d)` | Zero-padded date assembly | `LPAD` + string concat or `TO_DATE` |
+| `instr(string, substring)` | Find position of character in string | `POSITION(substring IN string)` |
+| `substr(string, start, length)` | Extract substring by position | `SUBSTRING(string FROM start FOR length)` |
+| `PRAGMA foreign_keys = ON` | Enable FK constraint enforcement | FK constraints are on by default |
+| `INTEGER PRIMARY KEY AUTOINCREMENT` | Auto-incrementing surrogate key | `SERIAL PRIMARY KEY` or `GENERATED ALWAYS AS IDENTITY` |
+
+All analytical queries (scripts 03–14) use only standard SQL — CTEs, window functions, `GROUP BY`, `CASE`, `JOIN` — and are fully portable to PostgreSQL, DuckDB, or any ANSI-compliant engine without modification. Only the ETL script (`02_data_loading.sql`) requires the substitutions above.
