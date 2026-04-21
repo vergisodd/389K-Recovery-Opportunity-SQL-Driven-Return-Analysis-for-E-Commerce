@@ -174,3 +174,26 @@ SELECT
 FROM products
 WHERE discount < 0
    OR discount > 1;
+
+-- =========================
+-- 11. Category conflict audit
+-- Counts products where the staging layer contains more than one
+-- distinct category value for the same product_id.
+-- These conflicts were resolved in ETL using modal + alphabetical
+-- tie-breaker, but the underlying ambiguity is flagged here for
+-- visibility. A high conflict count warrants investigation at source.
+-- This check is informational — it does not produce a PASS/FAIL
+-- because category conflicts are a known data quality issue in the
+-- source dataset, not an ETL failure.
+-- =========================
+SELECT
+    COUNT(*)                    AS products_with_category_conflicts,
+    ROUND(COUNT(*) * 100.0 /
+        (SELECT COUNT(DISTINCT product_id)
+         FROM staging_ecommerce), 2) AS pct_of_all_products
+FROM (
+    SELECT product_id
+    FROM staging_ecommerce
+    GROUP BY product_id
+    HAVING COUNT(DISTINCT category) > 1
+);
