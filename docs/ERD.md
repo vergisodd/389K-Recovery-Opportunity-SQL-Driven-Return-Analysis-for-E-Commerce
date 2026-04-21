@@ -9,37 +9,40 @@ The data model for this project was designed to support accurate, multi-dimensio
 ---
 
 ## Schema
-
 ```
 customers
 ─────────────────────────
 customer_id   PK
-customer_name
-email
-region
+customer_age  INTEGER
+customer_gender TEXT
 
 products
 ─────────────────────────
 product_id    PK
-product_name
-category
-unit_price
+category      TEXT
+price         REAL
+discount      REAL
 
 orders
 ─────────────────────────
-order_id      PK
-customer_id   FK → customers.customer_id
-product_id    FK → products.product_id
-order_date
-order_value
-quantity
+order_id        PK
+customer_id     FK → customers
+product_id      FK → products
+order_date      DATE
+delivered_date  DATE
+quantity        INTEGER
+payment_method  TEXT
+region          TEXT
+total_amount    REAL
+shipping_cost   REAL
+profit_margin   REAL
 
 returns
 ─────────────────────────
-return_id     PK
-order_id      FK → orders.order_id
-return_date
-return_reason
+return_id     PK (AUTOINCREMENT)
+order_id      FK → orders (UNIQUE)
+request_date  DATE
+return_reason TEXT
 ```
 
 ---
