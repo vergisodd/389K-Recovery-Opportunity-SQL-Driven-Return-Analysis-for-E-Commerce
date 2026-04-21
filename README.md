@@ -336,25 +336,26 @@ Observed repeat behavior appears relatively stable across cohorts, suggesting pr
 
 ---
 
-## Customer Risk Segmentation
+### Customer Risk Segmentation and Financial Impact
 
-Customers were classified into four risk tiers based on return rate and order volume (minimum order threshold applied to reduce noise from low-activity customers):
+Customers were segmented by **return behavior** using return rate and a minimum order threshold to reduce noise from low-activity accounts. To make the analysis business-relevant, each segment was also evaluated by its financial contribution to return-related loss.
 
-| Segment | Customers | Avg Return Rate | Business Implication |
-|:---|---:|---:|:---|
-| High Risk | 17 | 87.8% | Extreme return behavior — likely systematic issue or severe expectation mismatch |
-| Moderate Risk | 1,006 | ~33–40% | Repeat returners — requires monitoring and deeper behavioral analysis |
-| Low Risk | 7,982 | ~12–20% | Normal customer behavior — expected return patterns |
-| No Returns | 6,187 | 0% | Majority of customer base — stable segment with no return activity |
+| Behavior Segment | Customers | Avg Return Rate (%) | Total Revenue | Total Return Loss | Share of Total Return Loss (%) | Avg Loss per Customer |
+|------------------|-----------|---------------------|---------------|-------------------|-------------------------------|-----------------------|
+| High Risk        | 42        | 53.41               | 27,610.66     | 19,317.39         | 5.35                          | 459.94                |
+| Moderate Risk    | 903       | 26.16               | 724,253.83    | 206,387.22        | 57.20                         | 228.56                |
+| Low Risk         | 628       | 14.44               | 771,076.21    | 135,131.30        | 37.45                         | 215.18                |
+| No Returns       | 6,187     | 0.00                | 4,292,312.10  | 0.00              | 0.00                          | 0.00                  |
 
 **Key insight:**  
-The previously assumed “small group of extreme abusers” is **significantly smaller and less dominant than initially thought once filtering and minimum order constraints are applied**. The High Risk group exists, but it is not the main driver of overall return volume.
+The most extreme returners are not the main financial problem. Although the High Risk segment shows the highest average return behavior, it contributes only **5.35%** of total return-related loss. The larger **Moderate Risk** segment is the real driver of leakage, accounting for **57.2%** of total return loss.
 
-**What this actually means:**  
-Returns are not concentrated in a single abusive segment. Instead, they are **distributed across a broader moderate-risk population**, which reduces the effectiveness of targeting only extreme customers.
+**What this means:**  
+Return-related revenue leakage is not concentrated in a tiny group of abusive customers. Instead, the larger Moderate Risk population creates the biggest business impact through scale. This suggests the problem is broader than abuse alone and may also reflect product mismatch, fulfillment issues, or expectation gaps.
 
 **Why this matters for policy:**  
-A blanket policy change targeting all returners would be inefficient. Since **the majority of customers (7,982 + 6,187) are low or no-return users**, aggressive restrictions would negatively affect good customers while only marginally impacting total return loss.
+A blanket return restriction policy would likely be inefficient. The business would risk creating friction for healthy customers while failing to meaningfully reduce the main source of financial loss. A better strategy is to monitor extreme returners, but prioritize investigation into the broader Moderate Risk segment where most leakage occurs.
+
 
 ---
 
