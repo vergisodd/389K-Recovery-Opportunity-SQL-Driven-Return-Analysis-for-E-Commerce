@@ -476,41 +476,40 @@ A naive join between orders and returns can inflate revenue figures due to row d
 
 ## Project Structure
 
-```
+```text
 ecommerce-revenue-leakage/
 │
 ├── dashboard/
-│   ├── dashboard_preview.png       # Static preview image
-│   └── e-comm_dashboard.pbix       # Power BI dashboard file
+│   ├── dashboard_preview.png       # Static preview of the Power BI dashboard
+│   └── e-comm_dashboard.pbix       # Interactive Power BI dashboard
 │
 ├── data/
 │   ├── raw/                        # Original Kaggle dataset (unmodified)
-│   └── cleaned/                    # Normalized CSVs after ETL
+│   └── cleaned/                    # Normalized CSVs generated after ETL
 │
 ├── docs/
-│   ├── ERD.md                      # Entity relationship diagram + rationale
-│   ├── ERD.png                     # Visual ERD (dbdiagram.io)
-│   ├── architecture.md             # Pipeline architecture overview
+│   ├── ERD.md                      # Entity relationship diagram and modeling rationale
+│   ├── ERD.png                     # Visual ERD built in dbdiagram.io
+│   ├── architecture.md             # Pipeline architecture and workflow overview
 │   ├── architecture_ETL.png        # ETL flow diagram
-│   └── data_modeling.md            # Normalization decisions + SQL examples
+│   └── data_modeling.md            # Normalization decisions and SQL modeling notes
 │
 ├── sql/
-│   ├── 01_schema.sql               # Table creation + foreign key constraints
-│   ├── 02_data_loading.sql         # Staging ingest + ETL transforms
-│   ├── 03_revenue_analysis.sql     # KPIs: gross revenue, return loss, net revenue
-│   ├── 04_customer_analysis.sql    # LTV ranking + risk segmentation
-│   ├── 05_product_analysis.sql     # Pareto analysis + loss ranking
-│   ├── 06_category_analysis.sql    # Category return rates + leakage
-│   ├── 07_data_validation.sql      # Row counts, duplicates, null checks
-│   ├── 08_pareto_analysis.sql      # Cumulative loss distribution
-│   ├── 09_join_pitfall_demo.sql    # Naive vs. corrected join approach
-│   ├── 10_time_analysis.sql        # Time-based trends
-│   ├── 11_customer_behavior_analysis.sql  # Behavioral patterns
-│   └── 12_cohort_analysis.sql      # Repeat purchase cohort tracking
+│   ├── 01_schema.sql               # Creates normalized tables with keys and constraints
+│   ├── 02_data_loading.sql         # Loads staging data and standardizes date fields
+│   ├── 03_revenue_analysis.sql     # Gross revenue, return loss, net revenue, return rate
+│   ├── 04_customer_analysis.sql    # Customer value, return behavior, and leakage exposure
+│   ├── 05_product_analysis.sql     # Product revenue, return behavior, and loss ranking
+│   ├── 06_category_analysis.sql    # Category-level revenue, return rates, and leakage impact
+│   ├── 07_data_validation.sql      # ETL reconciliation, duplicate checks, and data quality tests
+│   ├── 08_pareto_analysis.sql      # Cumulative distribution of return-related product loss
+│   ├── 09_join_pitfall_demo.sql    # Demonstrates inflated metrics from non-deduplicated joins
+│   ├── 10_time_analysis.sql        # Monthly order, revenue, return loss, and return rate trends
+│   ├── 11_customer_behavior_analysis.sql  # Customer behavior risk and financial impact segmentation
+│   └── 12_cohort_analysis.sql      # Cohort-based repeat purchase and retention analysis
 │
 ├── README.md
 └── license
-```
 
 ---
 
