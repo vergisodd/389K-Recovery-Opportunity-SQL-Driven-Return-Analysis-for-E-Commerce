@@ -36,8 +36,8 @@ This analysis delivers end-to-end SQL investigation: data modeling and normaliza
 - **Electronics** generates the most revenue and the most return loss ($166K), making it the single highest-impact category for intervention
 - **Fashion** has the highest return rate at **8.05%**, suggesting expectation mismatch is likely a stronger issue than product defect volume alone
 - **Return-related loss is broader than a simple 80/20 product story**: several products show severe leakage, but loss is not concentrated enough to support a clean “few bad SKUs explain everything” narrative
-- **Customer behavior risk and customer financial impact are not the same thing**: the most extreme returners are not the largest source of total loss
-- The **High Risk** segment is behaviorally extreme, but the much larger **Moderate Risk** segment drives most total return loss through scale, accounting for **57.2%** of leakage
+- **Customer  risk and customer financial impact are not the same thing**: the most extreme returners are not the largest source of total loss
+- The **High Risk** segment is ally extreme, but the much larger **Moderate Risk** segment drives most total return loss through scale, accounting for **57.2%** of leakage
 
 ---
 
@@ -66,7 +66,7 @@ Based on SQL findings, the highest-leverage interventions are:
 
 3. **Address Fashion's return rate through better product presentation** — 8.05% is the highest category rate and most likely reflects sizing information gaps or photography that misrepresents the product, not a quality problem
 
-4. **Separate customer value from return risk in monitoring** — customer behavior risk and financial impact should be monitored separately; a blanket return policy change would penalize your best buyers to target a different group entirely
+4. **Separate customer value from return risk in monitoring** — customer  risk and financial impact should be monitored separately; a blanket return policy change would penalize your best buyers to target a different group entirely
 
 5. **Build a recurring return dashboard** — track return rate and return loss monthly by category and SKU so trends surface before they compound; Electronics at 7.3% already warrants a standing alert
 
@@ -77,7 +77,7 @@ Based on SQL findings, the highest-leverage interventions are:
 | Layer | Focus | Key Output |
 |:---|:---|:---|
 | Revenue Overview | Baseline health metrics | $389K leakage on $5.87M revenue |
-| Customer Analysis | Behavior risk + financial impact | High Risk is small; Moderate Risk drives most loss |
+| Customer Analysis |  risk + financial impact | High Risk is small; Moderate Risk drives most loss |
 | Product Analysis | SKU-level leakage ranking | High-loss products identified; concentration broader than expected |
 | Category Analysis | Return rate + loss by category | Electronics = highest loss · Fashion = highest rate |
 | Cohort Analysis | Repeat purchase activity over time | Stable observed activity, but limited lifecycle visibility |
@@ -311,7 +311,7 @@ Loss is concentrated in top products, but not strongly enough to support a simpl
 Customers are grouped by first purchase month and tracked by later activity month to measure repeat purchase activity over time.
 
 **Why this matters:**
-Cohort analysis helps test whether repeat behavior is stable or whether customer engagement declines over time.
+Cohort analysis helps test whether repeat purchase is stable or whether customer engagement declines over time.
 
 ```sql
 WITH first_purchase AS (
