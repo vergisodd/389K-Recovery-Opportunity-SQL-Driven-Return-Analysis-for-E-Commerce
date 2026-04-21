@@ -536,7 +536,7 @@ ecommerce-revenue-leakage/
 │
 ├── sql/
 │   ├── 01_schema.sql               # Creates normalized tables with keys and constraints
-│   ├── 02_data_loading.sql         # Loads staging data and standardizes date fields
+│   ├── 02_data_loading.sql         # Loads staging data, deduplicates, standardizes dates
 │   ├── 03_revenue_analysis.sql     # Gross revenue, return loss, net revenue, return rate
 │   ├── 04_customer_analysis.sql    # Customer value, return behavior, and leakage exposure
 │   ├── 05_product_analysis.sql     # Product revenue, return behavior, and loss ranking
@@ -546,7 +546,9 @@ ecommerce-revenue-leakage/
 │   ├── 09_join_pitfall_demo.sql    # Demonstrates inflated metrics from non-deduplicated joins
 │   ├── 10_time_analysis.sql        # Monthly order, revenue, return loss, and return rate trends
 │   ├── 11_customer_behavior_analysis.sql  # Customer behavior risk and financial impact segmentation
-│   └── 12_cohort_analysis.sql      # Cohort-based repeat purchase and retention analysis
+│   ├── 12_cohort_analysis.sql      # Cohort-based repeat purchase and retention analysis
+│   ├── 13_return_reason_analysis.sql     # Return reason breakdown by volume, category, region, and segment
+│   └── 14_profit_margin_analysis.sql     # True economic cost of returns accounting for margin and shipping
 │
 ├── README.md
 └── license
