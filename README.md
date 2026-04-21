@@ -43,7 +43,7 @@ This analysis delivers end-to-end SQL investigation: data modeling and normaliza
 
 ## Dashboard Preview
 
-![E-Commerce Revenue Leakage Dashboard](dashboard/dashboard_preview.png)
+![E-Commerce Revenue Leakage Dashboard](dashboard/dashboard_overview.png)
 
 > Built in Power BI · Revenue overview · Customer risk segmentation · Category breakdown · Product loss concentration
 
@@ -83,16 +83,20 @@ Based on SQL findings, the highest-leverage interventions are:
 | Cohort Analysis | Repeat purchase activity over time | Stable observed activity, but limited lifecycle visibility |
 
 ---
+## SQL Highlights
 
-# SQL Highlights
+This project goes beyond basic aggregation; every query is designed to answer a specific business question.
  
-This document walks through the key analytical queries in this project — the techniques used, why each approach was chosen, and what the results revealed.
- 
-For the full scripts, see the [`/sql`](.) folder.
- 
----
- 
-## 1. Customer Return Risk Segmentation
+| # | Query | Technique | Business Question |
+|:---|:---|:---|:---|
+| 1 | Customer risk segmentation | CTEs, `NTILE()`, `CASE` | Which customers are behaviorally risky vs financially damaging? |
+| 2 | Product leakage ranking | CTE, `RANK()` window function | Which products are destroying the most revenue through returns? |
+| 3 | Pareto loss distribution | Running `SUM()` window function | Is loss concentrated in a few products or spread broadly? |
+| 4 | Cohort repeat purchase | Date arithmetic, month-0 exclusion | Is repeat purchase stable or declining across acquisition cohorts? |
+| 5 | Return reason breakdown | `PARTITION BY`, actionability `CASE` | What is causing returns — and which team owns the fix? |
+| 6 | True economic cost | Multi-column aggregation, dual `RANK()` | How much do returns actually cost beyond the refund amount? |
+
+## 1. Customer Return Risk Segmentation 
  
 This analysis separates **behavioral risk** from **financial impact** so customers are not treated as a single return group.
  
@@ -171,7 +175,7 @@ The most extreme returners are not the main financial problem. Although the High
 **What this means for policy:**
 A blanket return restriction policy would create friction for healthy customers while failing to reduce the main source of loss. A better strategy is to monitor extreme returners separately while prioritizing investigation into the broader Moderate Risk segment.
  
-> Full script → [`04_customer_analysis.sql`](04_customer_analysis.sql) · [`11_customer_behavior_analysis.sql`](11_customer_behavior_analysis.sql)
+> Full queries with results and commentary → [`sql/sql_highlights.md`](sql/sql_highlights.md)
 
 
 ---
