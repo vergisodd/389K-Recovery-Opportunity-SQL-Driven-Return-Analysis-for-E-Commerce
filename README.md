@@ -12,10 +12,11 @@ This analysis delivers end-to-end SQL investigation: data modeling and normaliza
 ## TL;DR
 
 - Found **$389K recoverable revenue loss (5.52%)**
-- Identified **35 customers abusing returns (91% rate)**
-- Isolated **top 5 products driving disproportionate loss**
-- Flagged **Electronics ($166K loss)** as highest-impact category
-- Delivered **SQL + Power BI system for ongoing monitoring**
+- Identified a **small High Risk segment (42 customers, 53.41% avg return rate)**, but found that it drives only **5.35%** of total return loss
+- Showed that the much larger **Moderate Risk segment drives 57.2% of total return loss**
+- Flagged **Electronics ($166K loss)** as the highest-impact category
+- Identified several **high-loss, high-loss-rate products** as the clearest recovery opportunities
+- Delivered a **SQL + Power BI monitoring system** for ongoing leakage tracking
 
 ---
 
@@ -32,11 +33,11 @@ This analysis delivers end-to-end SQL investigation: data modeling and normaliza
 
 ## Key Findings
 
-- **Electronics** generates the most revenue and the most return loss ($166K) — a high-value, high-risk trade-off that needs active management
-- **Fashion** has the highest return rate at **8.05%**, likely driven by expectation mismatch rather than product defects
-- **Top 5 loss products** account for a disproportionate share of total leakage — a clear Pareto pattern that makes SKU-level review the highest-leverage starting point
-- **High-return customers** are mostly *not* the highest-value customers — risk and value must be monitored separately to avoid penalising your best buyers
-- **35 customers** average a **91% return rate** — nearly everything they order comes back, suggesting wardrobing behavior or a systemic profile mismatch
+- **Electronics** generates the most revenue and the most return loss ($166K), making it the single highest-impact category for intervention
+- **Fashion** has the highest return rate at **8.05%**, suggesting expectation mismatch is likely a stronger issue than product defect volume alone
+- **Return-related loss is broader than a simple 80/20 product story**: several products show severe leakage, but loss is not concentrated enough to support a clean “few bad SKUs explain everything” narrative
+- **Customer behavior risk and customer financial impact are not the same thing**: the most extreme returners are not the largest source of total loss
+- The **High Risk** segment is behaviorally extreme, but the much larger **Moderate Risk** segment drives most total return loss through scale, accounting for **57.2%** of leakage
 
 ---
 
@@ -44,7 +45,7 @@ This analysis delivers end-to-end SQL investigation: data modeling and normaliza
 
 ![E-Commerce Revenue Leakage Dashboard](dashboard/dashboard_preview.png)
 
-> Built in Power BI · Revenue overview · Customer risk segmentation · Product Pareto · Category breakdown
+> Built in Power BI · Revenue overview · Customer risk segmentation · Category breakdown · Product loss concentration
 
 This dashboard enables:
 
@@ -59,13 +60,13 @@ This dashboard enables:
 
 Based on SQL findings, the highest-leverage interventions are:
 
-1. **Audit the top 5 loss products first** — a small SKU set drives a disproportionate share of the $389K leakage; quality, fulfillment, or description issues are the most likely culprits and the fastest path to measurable recovery
+1. **Audit the highest-loss and highest-loss-rate products first** — product-level leakage is severe enough to justify immediate SKU review, even though the loss pattern is broader than a simple top-5 explanation
 
 2. **Investigate Electronics for defect or expectation issues** — at $166K in return loss and a 7.3% return rate, this category is the single largest lever; even a 2% reduction in return rate recovers ~$40K annually
 
 3. **Address Fashion's return rate through better product presentation** — 8.05% is the highest category rate and most likely reflects sizing information gaps or photography that misrepresents the product, not a quality problem
 
-4. **Separate customer value from return risk in monitoring** — high-return customers are mostly not high-value customers; a blanket return policy change would penalise your best buyers to target a different group entirely
+4. **Separate customer value from return risk in monitoring** — customer behavior risk and financial impact should be monitored separately; a blanket return policy change would penalize your best buyers to target a different group entirely
 
 5. **Build a recurring return dashboard** — track return rate and return loss monthly by category and SKU so trends surface before they compound; Electronics at 7.3% already warrants a standing alert
 
@@ -76,10 +77,10 @@ Based on SQL findings, the highest-leverage interventions are:
 | Layer | Focus | Key Output |
 |:---|:---|:---|
 | Revenue Overview | Baseline health metrics | $389K leakage on $5.87M revenue |
-| Customer Analysis | LTV vs. return risk separation | Risk segments: High / Moderate / Low |
-| Product Analysis | SKU-level Pareto of losses | Top 5 products = outsized leakage share |
-| Category Analysis | Return rate + loss by segment | Electronics = highest loss · Fashion = highest rate |
-| Cohort Analysis | Repeat purchase behavior over time | ~12% reactivation rate at 12 months |
+| Customer Analysis | Behavior risk + financial impact | High Risk is small; Moderate Risk drives most loss |
+| Product Analysis | SKU-level leakage ranking | High-loss products identified; concentration broader than expected |
+| Category Analysis | Return rate + loss by category | Electronics = highest loss · Fashion = highest rate |
+| Cohort Analysis | Repeat purchase activity over time | Stable observed activity, but limited lifecycle visibility |
 
 ---
 
@@ -169,7 +170,7 @@ WHERE total_returns = 0
 
 ORDER BY return_loss DESC, return_rate DESC;
 ```
-### Key Insight
+**Key insight:**
 
 The high-risk group exists, but it is much smaller than expected. Return activity is not driven only by a tiny abusive segment. A broader moderate-risk population contributes meaningful return volume, which makes blanket restriction policies less effective.
 
@@ -179,7 +180,7 @@ The high-risk group exists, but it is much smaller than expected. Return activit
 
 This analysis ranks products by return-related financial loss using product-level revenue, return volume, and leakage metrics.
 
-Why this matters:
+**Why this matters:**
 A product may have a high return rate without being the biggest business problem. Looking at both return behavior and financial loss helps identify where intervention matters most.
 
 ```sql
@@ -219,8 +220,44 @@ FROM filtered
 ORDER BY return_loss DESC
 LIMIT 10;
 ```
-### Key insight:
-Several products show extremely high loss_rate, meaning return-related loss consumes a large share of product revenue. That points to likely issues in product quality, fulfillment accuracy, or expectation mismatch.
+Each product was evaluated using:
+
+- total orders
+- gross revenue
+- return orders
+- return loss
+- loss rate
+- return rate
+
+| Product ID | Category    | Total Orders | Gross Revenue | Return Loss | Loss Rate | Return Rate | Loss Rank |
+|------------|-------------|--------------|---------------|-------------|-----------|-------------|-----------|
+| P246300    | Home        | 3            | 3,387.94      | 2,756.52    | 0.8136    | 0.3333      | 1         |
+| P247404    | Electronics | 3            | 2,386.33      | 2,374.97    | 0.9952    | 0.6667      | 2         |
+| P215448    | Fashion     | 3            | 1,710.13      | 1,638.32    | 0.9580    | 0.6667      | 3         |
+| P249949    | Fashion     | 3            | 4,724.99      | 1,627.44    | 0.3444    | 0.3333      | 4         |
+| P205121    | Toys        | 3            | 1,492.90      | 1,449.95    | 0.9712    | 0.3333      | 5         |
+| P229733    | Sports      | 4            | 1,632.79      | 1,356.72    | 0.8309    | 0.2500      | 6         |
+| P225938    | Sports      | 3            | 3,921.18      | 1,325.94    | 0.3381    | 0.3333      | 7         |
+| P227683    | Toys        | 3            | 1,354.62      | 1,313.35    | 0.9695    | 0.6667      | 8         |
+| P218888    | Home        | 3            | 1,453.23      | 1,312.28    | 0.9030    | 0.3333      | 9         |
+| P225151    | Home        | 3            | 1,854.08      | 1,094.35    | 0.5902    | 0.3333      | 10        |
+
+**Key insight:**  
+Several top-ranked products show extremely high **loss rates**, with return-related loss consuming most of the revenue those products generated. In some cases, the loss rate is above **95%**, which means the product is barely contributing positive revenue after returns. 
+
+**What this means:**  
+This ranking shows that a product does not need the highest order volume to become a major leakage source. A small number of returned orders can still destroy most of the revenue generated by a low-volume item.
+
+**Why this matters for the business:**  
+High-loss products may indicate issues such as:
+
+- product quality defects
+- inaccurate product descriptions
+- customer expectation mismatch
+- fulfillment or shipping problems
+
+Rather than changing policy broadly, the business can target a much smaller set of products where the recovery opportunity is most immediate.
+
 
 ---
 
@@ -228,7 +265,7 @@ Several products show extremely high loss_rate, meaning return-related loss cons
 
 This analysis tests whether a small subset of products is responsible for most return-related losses.
 
-Why this matters:
+**Why this matters:**
 If return loss is highly concentrated, the business can focus on a small number of products. If it is spread more broadly, recovery efforts need to be wider.
 
 ```sql
@@ -266,14 +303,14 @@ SELECT
 FROM ranked
 ORDER BY total_loss DESC, product_id;
 ```
-### Key insight:
+**Key insight:**
 Loss is concentrated in top products, but not strongly enough to support a simple 80/20 story. The distribution is broader than expected.
 
-### 4. Cohort Analysis: Repeat Purchase Behavior
+### 4. Cohort Analysis: Repeat Purchase Activity
 
-Customers are grouped by first purchase month and tracked by later activity month to measure repeat purchase behavior over time.
+Customers are grouped by first purchase month and tracked by later activity month to measure repeat purchase activity over time.
 
-Why this matters:
+**Why this matters:**
 Cohort analysis helps test whether repeat behavior is stable or whether customer engagement declines over time.
 
 ```sql
@@ -326,17 +363,19 @@ JOIN cohort_size cs
     ON cd.cohort_month = cs.cohort_month
 ORDER BY cd.cohort_month, cd.months_since_first_order;
 ```
-### Important limitation:
+**Important limitation:**
 The dataset does not contain a full continuous monthly timeline, so this analysis is directional only and should not be interpreted as a complete lifecycle retention model.
 
-### Key insight:
-Observed repeat behavior appears relatively stable across cohorts, suggesting product or experience factors may matter more than lifecycle timing in this dataset.
+**Key insight:**
+Observed repeat purchase activity appears relatively stable across cohorts, suggesting product or experience factors may matter more than lifecycle timing in this dataset.
 
 > Full SQL scripts → [`/sql`](sql/)
 
 ---
 
 ### Customer Risk Segmentation and Financial Impact
+
+The query logic above becomes more meaningful when aggregated to the segment level. The summary below shows which customer groups are behaviorally risky and which groups actually drive the most financial loss.
 
 Customers were segmented by **return behavior** using return rate and a minimum order threshold to reduce noise from low-activity accounts. To make the analysis business-relevant, each segment was also evaluated by its financial contribution to return-related loss.
 
@@ -359,14 +398,14 @@ A blanket return restriction policy would likely be inefficient. The business wo
 
 ---
 
-## Cohort Analysis — Repeat Purchase Behavior
+## Cohort Analysis — Repeat Purchase Activity
 
-Customers grouped by first purchase month and tracked for return behavior over time.
+Customers grouped by first purchase month and tracked for repeat purchase activity over time.
 
 **Data context:**  
 The dataset contains orders from Oct–Dec 2023 and Oct–Dec 2024 only. Because months 2–9 are missing, this analysis cannot measure continuous retention curves. It is limited to short-term return behavior and long-term reactivation signals.
 
-| Cohort | Month 0 Customers | Month 1 Return Rate | ~12-Month Return Rate |
+| Cohort | Month 0 Customers | Month 1 Activity Rate | ~12-Month Activity Rate |
 |:---|---:|---:|---:|
 | Oct 2023 | 961 | 11.2% | 12.3% |
 | Nov 2023 | 795 | 12.1% | 13.7% |
@@ -374,7 +413,7 @@ The dataset contains orders from Oct–Dec 2023 and Oct–Dec 2024 only. Because
 | Oct 2024 | 700 | 11.7% | — |
 
 **Key finding:**  
-Return/reactivation behavior is remarkably stable across cohorts, staying in the ~11–13% range. This suggests that repeat engagement is consistent over time rather than being driven by specific cohort anomalies.
+Repeat purchase activity is remarkably stable across cohorts, staying in the ~11–13% range. This suggests that repeat engagement is consistent over time rather than being driven by specific cohort anomalies.
 
 **What this actually means:**  
 - There is **no strong cohort decay pattern visible in the available data**
@@ -390,7 +429,7 @@ Because intermediate months (2–9) are missing, it is impossible to evaluate:
 This means the analysis is **directional only**, not a full lifecycle model.
 
 **Conclusion:**  
-The dataset supports only a simplified interpretation: customer repeat behavior is stable, but the absence of continuous time coverage limits deeper lifecycle conclusions.
+The dataset supports only a simplified interpretation: customer repeat purchase activity is stable, but the absence of continuous time coverage limits deeper lifecycle conclusions.
 
 > Full cohort analysis → [`sql/12_cohort_analysis.sql`](sql/12_cohort_analysis.sql)
 
@@ -410,7 +449,7 @@ All analytical outputs are supported by validation steps to ensure accuracy and 
 
 ```sql
 -- Total revenue before cleaning
-SELECT SUM(order_value) FROM staging_ecommerce;
+SELECT SUM(total_amount) FROM staging_ecommerce;
 
 -- Total revenue after transformation
 SELECT SUM(total_amount) FROM orders;
@@ -511,7 +550,7 @@ ecommerce-revenue-leakage/
 │
 ├── README.md
 └── license
-
+``` 
 ---
 
 ## Why This Project Stands Out
@@ -539,13 +578,13 @@ ecommerce-revenue-leakage/
 
 ## Recommended Next Steps
 
-> **If you read nothing else:** 35 customers average a 91% return rate, Electronics alone accounts for $166K in loss, and we still don't know *why* — because return reasons aren't captured. That's the single highest-leverage gap in this dataset.
+> **If you read nothing else:** the biggest financial problem is not a tiny extreme-abuse segment. The larger Moderate Risk customer group drives **57.2% of total return loss**, Electronics alone accounts for **$166K** in loss, and the biggest remaining gap is root-cause visibility.
 
 After delivering these findings, my next three priorities would be:
 
-- **Add a `return_reason` field** — right now we know *where* leakage is concentrated but not *why*. One column unlocks root cause analysis and turns this from a measurement project into an actionable one.
-- **Run a cohort analysis on high-return customers** — are they new customers with misaligned expectations, or long-term customers with quality concerns? The answer changes the intervention entirely.
-- **Set return rate alert thresholds in the dashboard** — Electronics at 7.3% is already elevated; a trigger at 8% gives the team a leading indicator before losses compound, shifting the response from reactive to proactive.
+- **Add structured return-reason analysis** — the project identifies where leakage is concentrated, but root cause still needs to be validated systematically across categories and products
+- **Investigate the Moderate Risk customer segment more deeply** — this group drives most return-related loss, so understanding whether the issue is product mismatch, fulfillment friction, or repeat behavioral patterns would have the highest payoff
+- **Set return-rate and return-loss alert thresholds in the dashboard** — category and product-level monitoring should surface leakage spikes early, especially in Electronics and the highest-loss products
 
 ---
 
