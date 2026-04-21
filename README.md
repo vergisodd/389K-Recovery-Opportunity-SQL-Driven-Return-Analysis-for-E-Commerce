@@ -87,37 +87,37 @@ Based on SQL findings, the highest-leverage interventions are:
 
 ## SQL Highlights
 
-This project focuses on identifying revenue leakage, customer behavior patterns, and product-level loss concentration using analytical SQL.
-
----
+This project focuses on identifying revenue leakage, customer return behavior, and product-level loss concentration using analytical SQL.
 
 ### 1. Customer Return Risk Segmentation
 
-Identifies customers based on return behavior to detect abnormal return patterns.
+This analysis separates **behavioral risk** from **financial impact** so customers are not treated as a single return group.
 
-**Why this matters:**  
-Most return systems fail by treating all customers the same. This hides the real problem, a small group of customers driving disproportionate return activity, while high-value customers are incorrectly penalized.
+**Why this matters:**
+Most return systems fail because they apply blanket rules across the customer base. That can penalize loyal customers while missing the groups actually creating meaningful return-related loss.
 
-This segmentation separates:
-- behavioral risk (return frequency)
-- from business value (order behavior)
+**SQL Script**
 
 ```sql
 WITH customer_orders AS (
-    SELECT 
+    SELECT
         customer_id,
         COUNT(order_id) AS total_orders,
-        SUM(total_amount) AS total_revenue,
+        ROUND(SUM(total_amount), 2) AS total_revenue,
         SUM(CASE WHEN returned = 'Yes' THEN 1 ELSE 0 END) AS total_returns,
-        SUM(CASE WHEN returned = 'Yes' THEN total_amount ELSE 0 END) AS return_loss
+        ROUND(SUM(CASE WHEN returned = 'Yes' THEN total_amount ELSE 0 END), 2) AS return_loss
     FROM staging_ecommerce
     GROUP BY customer_id
 ),
 
 base AS (
-    SELECT 
-        *,
-        CAST(total_returns AS FLOAT) / NULLIF(total_orders, 0) AS return_rate
+    SELECT
+        customer_id,
+        total_orders,
+        total_revenue,
+        total_returns,
+        return_loss,
+        ROUND(total_returns * 1.0 / NULLIF(total_orders, 0), 4) AS return_rate
     FROM customer_orders
 ),
 
@@ -127,131 +127,212 @@ filtered AS (
     WHERE total_orders >= 3
 ),
 
-scored AS (
+ranked AS (
     SELECT
         *,
-        
-        -- normalize loss impact vs peers
-        NTILE(4) OVER (ORDER BY return_loss DESC) AS loss_quartile
+        NTILE(5) OVER (ORDER BY return_loss DESC) AS loss_quintile
     FROM filtered
 )
 
-SELECT 
+SELECT
     customer_id,
     total_orders,
     total_returns,
-    ROUND(total_revenue, 2) AS total_revenue,
-    ROUND(return_loss, 2) AS return_loss,
-    ROUND(return_rate, 3) AS return_rate,
-
+    total_revenue,
+    return_loss,
+    return_rate,
     CASE
-        -- extreme behavioral + financial risk
-        WHEN return_rate >= 0.6 AND loss_quartile = 1 THEN 'High Risk'
-
-        -- moderate behavioral + moderate loss
-        WHEN return_rate >= 0.3 AND loss_quartile <= 2 THEN 'Moderate Risk'
-
-        -- low behavior OR low financial impact
+        WHEN total_returns = 0 THEN 'No Returns'
+        WHEN return_rate >= 0.50 THEN 'High Risk'
+        WHEN return_rate >= 0.20 THEN 'Moderate Risk'
         ELSE 'Low Risk'
-    END AS risk_segment
+    END AS behavior_segment,
+    CASE
+        WHEN total_returns = 0 THEN 'No Impact'
+        WHEN loss_quintile = 1 THEN 'High Impact'
+        ELSE 'Low Impact'
+    END AS impact_segment
+FROM ranked
+WHERE total_returns > 0
 
-FROM scored
-ORDER BY return_loss DESC;
+UNION ALL
+
+SELECT
+    customer_id,
+    total_orders,
+    total_returns,
+    total_revenue,
+    return_loss,
+    return_rate,
+    'No Returns' AS behavior_segment,
+    'No Impact' AS impact_segment
+FROM base
+WHERE total_returns = 0
+
+ORDER BY return_loss DESC, return_rate DESC;
 ```
+### Key Insight
+
+The high-risk group exists, but it is much smaller than expected. Return activity is not driven only by a tiny abusive segment. A broader moderate-risk population contributes meaningful return volume, which makes blanket restriction policies less effective.
 
 ---
 
 ### 2. Product Revenue Leakage Ranking
 
-Ranks products by total financial loss caused by returns using a CTE and `RANK()` window function.
+This analysis ranks products by return-related financial loss using product-level revenue, return volume, and leakage metrics.
+
+Why this matters:
+A product may have a high return rate without being the biggest business problem. Looking at both return behavior and financial loss helps identify where intervention matters most.
 
 ```sql
-WITH product_base AS (
+WITH product_leakage AS (
     SELECT
         p.product_id,
         p.category,
-
         COUNT(o.order_id) AS total_orders,
-        SUM(o.total_amount) AS gross_revenue,
-
-        SUM(CASE WHEN r.order_id IS NOT NULL THEN 1 ELSE 0 END) AS return_orders,
-        SUM(CASE WHEN r.order_id IS NOT NULL THEN o.total_amount ELSE 0 END) AS return_loss
-
+        ROUND(SUM(o.total_amount), 2) AS gross_revenue,
+        COUNT(r.order_id) AS return_orders,
+        ROUND(
+            COALESCE(SUM(CASE WHEN r.order_id IS NOT NULL THEN o.total_amount END), 0),
+            2
+        ) AS return_loss
     FROM products p
-    JOIN orders o 
+    JOIN orders o
         ON p.product_id = o.product_id
-
-    LEFT JOIN returns r 
+    LEFT JOIN returns r
         ON o.order_id = r.order_id
-
     GROUP BY p.product_id, p.category
 ),
-
 filtered AS (
     SELECT *
-    FROM product_base
-    WHERE total_orders >= 3   -- 🔥 KEY FIX: remove noise / single-order products
-),
-
-scored AS (
-    SELECT
-        *,
-        ROUND(return_loss * 1.0 / NULLIF(gross_revenue, 0), 4) AS loss_rate,
-        ROUND(return_orders * 1.0 / NULLIF(total_orders, 0), 4) AS return_rate
-    FROM filtered
+    FROM product_leakage
+    WHERE total_orders >= 3
 )
-
 SELECT
     product_id,
     category,
     total_orders,
-    ROUND(gross_revenue, 2) AS gross_revenue,
-    ROUND(return_loss, 2) AS return_loss,
-    loss_rate,
-    return_rate,
-
+    gross_revenue,
+    return_orders,
+    return_loss,
+    ROUND(return_loss * 1.0 / NULLIF(gross_revenue, 0), 4) AS loss_rate,
     RANK() OVER (ORDER BY return_loss DESC) AS loss_rank
-
-FROM scored
-ORDER BY return_loss DESC;
+FROM filtered
+ORDER BY return_loss DESC
+LIMIT 10;
 ```
+### Key insight:
+Several products show extremely high loss_rate, meaning return-related loss consumes a large share of product revenue. That points to likely issues in product quality, fulfillment accuracy, or expectation mismatch.
 
 ---
 
 ### 3. Pareto Loss Analysis — Cumulative Distribution
 
-Identifies whether a small subset of products is responsible for most return-related losses. Hence, allowing the business to prioritize high-impact products rather than treating all returns equally.
+This analysis tests whether a small subset of products is responsible for most return-related losses.
+
+Why this matters:
+If return loss is highly concentrated, the business can focus on a small number of products. If it is spread more broadly, recovery efforts need to be wider.
 
 ```sql
 WITH product_loss AS (
     SELECT
         p.product_id,
-        SUM(CASE WHEN r.order_id IS NOT NULL THEN o.total_amount ELSE 0 END) AS total_loss
+        p.category,
+        ROUND(
+            COALESCE(SUM(CASE WHEN r.order_id IS NOT NULL THEN o.total_amount END), 0),
+            2
+        ) AS total_loss
     FROM products p
-    JOIN orders o 
+    JOIN orders o
         ON p.product_id = o.product_id
-    LEFT JOIN returns r 
+    LEFT JOIN returns r
         ON o.order_id = r.order_id
-    GROUP BY p.product_id
+    GROUP BY p.product_id, p.category
 ),
-
 ranked AS (
     SELECT
         product_id,
+        category,
         total_loss,
         SUM(total_loss) OVER () AS total_loss_all,
-        SUM(total_loss) OVER (ORDER BY total_loss DESC) AS cumulative_loss
+        SUM(total_loss) OVER (ORDER BY total_loss DESC, product_id) AS cumulative_loss
     FROM product_loss
+    WHERE total_loss > 0
 )
-
 SELECT
     product_id,
+    category,
     total_loss,
     cumulative_loss,
     ROUND(cumulative_loss * 100.0 / NULLIF(total_loss_all, 0), 2) AS cumulative_pct
 FROM ranked
-ORDER BY total_loss DESC;
+ORDER BY total_loss DESC, product_id;
 ```
+### Key insight:
+Loss is concentrated in top products, but not strongly enough to support a simple 80/20 story. The distribution is broader than expected.
+
+### 4. Cohort Analysis: Repeat Purchase Behavior
+
+Customers are grouped by first purchase month and tracked by later activity month to measure repeat purchase behavior over time.
+
+Why this matters:
+Cohort analysis helps test whether repeat behavior is stable or whether customer engagement declines over time.
+
+```sql
+WITH first_purchase AS (
+    SELECT
+        customer_id,
+        MIN(strftime('%Y-%m-01', order_date)) AS cohort_month
+    FROM orders
+    GROUP BY customer_id
+),
+customer_activity AS (
+    SELECT
+        o.customer_id,
+        strftime('%Y-%m-01', o.order_date) AS activity_month,
+        f.cohort_month
+    FROM orders o
+    JOIN first_purchase f
+        ON o.customer_id = f.customer_id
+),
+cohort_size AS (
+    SELECT
+        cohort_month,
+        COUNT(DISTINCT customer_id) AS cohort_customers
+    FROM first_purchase
+    GROUP BY cohort_month
+),
+cohort_data AS (
+    SELECT
+        ca.cohort_month,
+        ca.activity_month,
+        (
+            (CAST(strftime('%Y', ca.activity_month) AS INTEGER) - CAST(strftime('%Y', ca.cohort_month) AS INTEGER)) * 12
+        ) +
+        (
+            CAST(strftime('%m', ca.activity_month) AS INTEGER) - CAST(strftime('%m', ca.cohort_month) AS INTEGER)
+        ) AS months_since_first_order,
+        COUNT(DISTINCT ca.customer_id) AS active_customers
+    FROM customer_activity ca
+    GROUP BY ca.cohort_month, ca.activity_month
+)
+SELECT
+    cd.cohort_month,
+    cs.cohort_customers,
+    cd.activity_month,
+    cd.months_since_first_order,
+    cd.active_customers,
+    ROUND(cd.active_customers * 100.0 / NULLIF(cs.cohort_customers, 0), 2) AS retention_rate
+FROM cohort_data cd
+JOIN cohort_size cs
+    ON cd.cohort_month = cs.cohort_month
+ORDER BY cd.cohort_month, cd.months_since_first_order;
+```
+### Important limitation:
+The dataset does not contain a full continuous monthly timeline, so this analysis is directional only and should not be interpreted as a complete lifecycle retention model.
+
+### Key insight:
+Observed repeat behavior appears relatively stable across cohorts, suggesting product or experience factors may matter more than lifecycle timing in this dataset.
 
 > Full SQL scripts → [`/sql`](sql/)
 
