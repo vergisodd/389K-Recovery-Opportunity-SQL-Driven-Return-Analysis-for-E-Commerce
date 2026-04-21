@@ -1,7 +1,6 @@
 # E-Commerce Revenue Leakage Analysis — SQL-Driven Return Investigation
 
 ![Impact](https://img.shields.io/badge/Impact-$389K_Revenue_Loss_Analyzed-blue)
-![Tech](https://img.shields.io/badge/Tech-SQLite•_Advanced_SQL_•_Power_BI_•_Data_Modeling-blueviolet)
 ![Project](https://img.shields.io/badge/Type-Analytics_Case_Study-green)
 ![Status](https://img.shields.io/badge/Status-Completed-brightgreen)
 ![Domain](https://img.shields.io/badge/Domain-E--commerce-orange)
