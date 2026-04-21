@@ -11,11 +11,11 @@ This analysis delivers end-to-end SQL investigation: data modeling and normaliza
 
 ## TL;DR
 
-- Identified **$389K in revenue leakage (5.52% return rate)** across a $5.87M operation
-- Uncovered **35 customers with a 91% return rate** — a concentrated, high-priority risk group
-- Isolated **top 5 products driving a disproportionate share of total loss** (Pareto pattern)
-- Flagged **Electronics ($166K loss)** as the single highest-leverage intervention
-- Delivered a **SQL + Power BI solution** built for ongoing monthly monitoring
+- Found **$389K recoverable revenue loss (5.52%)**
+- Identified **35 customers abusing returns (91% rate)**
+- Isolated **top 5 products driving disproportionate loss**
+- Flagged **Electronics ($166K loss)** as highest-impact category
+- Delivered **SQL + Power BI system for ongoing monitoring**
 
 ---
 
@@ -48,10 +48,12 @@ This analysis delivers end-to-end SQL investigation: data modeling and normaliza
 
 > Built in Power BI · Revenue overview · Customer risk segmentation · Product Pareto · Category breakdown
 
-The dashboard enables:
-- Ongoing monitoring of return-driven revenue loss by category and SKU
-- Identification of high-risk customers and products before losses compound
-- Early detection of category-level return rate spikes with standing alert thresholds
+This dashboard enables:
+
+- Real-time tracking of return-driven revenue loss
+- Identification of high-risk customers and products
+- Early detection of category-level return spikes
+- Ongoing monitoring of recovery opportunities
 
 ---
 
