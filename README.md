@@ -19,8 +19,6 @@ This analysis delivers end-to-end SQL investigation: data modeling and normaliza
 
 ---
 
----
-
 ## Key Metrics
 
 | Metric | Value |
