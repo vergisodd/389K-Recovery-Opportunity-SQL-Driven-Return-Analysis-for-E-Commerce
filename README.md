@@ -574,19 +574,13 @@ ecommerce-revenue-leakage/
    - `04_customer_analysis.sql`
    - `05_product_analysis.sql`
    - `06_category_analysis.sql`
-   - through `12_cohort_analysis.sql`
+   - through `14_profit_margin_analysis.sql`
 
 ---
 
 ## Recommended Next Steps
 
-> **If you read nothing else:** the biggest financial problem is not a tiny extreme-abuse segment. The larger Moderate Risk customer group drives **57.2% of total return loss**, Electronics alone accounts for **$166K** in loss, and the biggest remaining gap is root-cause visibility.
-
-After delivering these findings, my next three priorities would be:
-
-- **Add structured return-reason analysis** — the project identifies where leakage is concentrated, but root cause still needs to be validated systematically across categories and products
-- **Investigate the Moderate Risk customer segment more deeply** — this group drives most return-related loss, so understanding whether the issue is product mismatch, fulfillment friction, or repeat behavioral patterns would have the highest payoff
-- **Set return-rate and return-loss alert thresholds in the dashboard** — category and product-level monitoring should surface leakage spikes early, especially in Electronics and the highest-loss products
+> See [`docs/recommended_next_steps.md`](docs/recommended_next_steps.md) for a full breakdown of the four highest-leverage extensions to this analysis.
 
 ---
 
