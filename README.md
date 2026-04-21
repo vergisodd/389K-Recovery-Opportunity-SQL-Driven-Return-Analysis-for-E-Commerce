@@ -597,9 +597,12 @@ ecommerce-revenue-leakage/
 ![dbdiagram.io](https://img.shields.io/badge/dbdiagram.io-DB%20Design-orange?style=flat-square)
 
 ## Related Docs
-
+ 
 | Document | Description |
 |:---|:---|
 | [`docs/data_modeling.md`](docs/data_modeling.md) | Normalization decisions, ETL transforms, schema validation |
 | [`docs/ERD.md`](docs/ERD.md) | Entity relationship diagram with design rationale |
 | [`docs/architecture.md`](docs/architecture.md) | Full pipeline architecture breakdown |
+| [`docs/recommended_next_steps.md`](docs/recommended_next_steps.md) | Four highest-leverage extensions to this analysis |
+| [`sql/sql_highlights.md`](sql/sql_highlights.md) | Key queries with results, commentary, and business context |
+
