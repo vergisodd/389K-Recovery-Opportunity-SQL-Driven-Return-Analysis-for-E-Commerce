@@ -159,24 +159,6 @@ FROM filtered
 WHERE total_orders >= 3
 ORDER BY return_loss DESC, return_rate DESC;
 ```
- 
-**Segment results:**
- 
-| Behavior Segment | Customers | Avg Return Rate (%) | Total Revenue | Total Return Loss | Share of Total Loss (%) | Avg Loss per Customer |
-|:---|---:|---:|---:|---:|---:|---:|
-| High Risk | 42 | 53.41 | 27,610.66 | 19,317.39 | 5.35 | 459.94 |
-| Moderate Risk | 903 | 26.16 | 724,253.83 | 206,387.22 | 57.20 | 228.56 |
-| Low Risk | 628 | 14.44 | 771,076.21 | 135,131.30 | 37.45 | 215.18 |
-| No Returns | 6,187 | 0.00 | 4,292,312.10 | 0.00 | 0.00 | 0.00 |
- 
-**Key insight:**
-The most extreme returners are not the main financial problem. Although the High Risk segment shows the highest average return rate, it contributes only **5.35%** of total return-related loss. The larger **Moderate Risk** segment accounts for **57.2%** of leakage due to scale, not to extreme individual behavior.
- 
- 
-> Full queries with results and commentary → [`sql/sql_highlights.md`](sql/sql_highlights.md)
-
-
----
 
 ### Customer Risk Segmentation and Financial Impact
 
