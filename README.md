@@ -170,10 +170,8 @@ ORDER BY return_loss DESC, return_rate DESC;
 | No Returns | 6,187 | 0.00 | 4,292,312.10 | 0.00 | 0.00 | 0.00 |
  
 **Key insight:**
-The most extreme returners are not the main financial problem. Although the High Risk segment shows the highest average return rate, it contributes only **5.35%** of total return-related loss. The larger **Moderate Risk** segment drives **57.2%** of leakage through scale — not through extreme individual behavior.
+The most extreme returners are not the main financial problem. Although the High Risk segment shows the highest average return rate, it contributes only **5.35%** of total return-related loss. The larger **Moderate Risk** segment accounts for **57.2%** of leakage due to scale, not to extreme individual behavior.
  
-**What this means for policy:**
-A blanket return restriction policy would create friction for healthy customers while failing to reduce the main source of loss. A better strategy is to monitor extreme returners separately while prioritizing investigation into the broader Moderate Risk segment.
  
 > Full queries with results and commentary → [`sql/sql_highlights.md`](sql/sql_highlights.md)
 
@@ -194,7 +192,7 @@ Customers were segmented by **return behavior** using return rate and a minimum 
 | No Returns       | 6,187     | 0.00                | 4,292,312.10  | 0.00              | 0.00                          | 0.00                  |
 
 **Key insight:**  
-The most extreme returners are not the main financial problem. Although the High Risk segment shows the highest average return behavior, it contributes only **5.35%** of total return-related loss. The larger **Moderate Risk** segment is the real driver of leakage, accounting for **57.2%** of total return loss.
+The most extreme returners are not the main financial problem. Although the High Risk segment shows the highest average return, it accounts for only **5.35%** of total return-related loss. The larger **Moderate Risk** segment is the real driver of leakage, accounting for **57.2%** of total return loss.
 
 **What this means:**  
 Return-related revenue leakage is not concentrated in a tiny group of abusive customers. Instead, the larger Moderate Risk population creates the biggest business impact through scale. This suggests the problem is broader than abuse alone and may also reflect product mismatch, fulfillment issues, or expectation gaps.
@@ -207,33 +205,24 @@ A blanket return restriction policy would likely be inefficient. The business wo
 
 ## Cohort Analysis — Repeat Purchase Activity
 
-Customers grouped by first purchase month and tracked for repeat purchase activity over time.
+Customers were grouped by first purchase month and tracked for repeat purchase activity over time.
 
-**Data context:**  
-The dataset contains orders from Oct–Dec 2023 and Oct–Dec 2024 only. Because months 2–9 are missing, this analysis cannot measure continuous retention curves. It is limited to short-term return behavior and long-term reactivation signals.
+## Cohort Analysis — Repeat Purchase Activity
 
-| Cohort | Month 0 Customers | Month 1 Activity Rate | ~12-Month Activity Rate |
+The dataset covers Oct–Dec 2023 and Oct–Dec 2024. Because months 2–9
+are missing, this is directional only — not a full retention model.
+
+| Cohort | Month 0 Customers | Month 1 Activity | ~12-Month Activity |
 |:---|---:|---:|---:|
 | Oct 2023 | 961 | 11.2% | 12.3% |
 | Nov 2023 | 795 | 12.1% | 13.7% |
 | Dec 2023 | 795 | — | 12.6% |
 | Oct 2024 | 700 | 11.7% | — |
 
-**Key finding:**  
-Repeat purchase activity is remarkably stable across cohorts, staying in the ~11–13% range. This suggests that repeat engagement is consistent over time rather than being driven by specific cohort anomalies.
-
 **What this actually means:**  
 - There is **no strong cohort decay pattern visible in the available data**
 - Repeat behavior appears **structurally stable, not time-dependent**
 - The signal is more likely driven by **product/category experience rather than customer lifecycle effects**
-
-**Scope limitation (important):**  
-Because intermediate months (2–9) are missing, it is impossible to evaluate:
-- true retention curves
-- churn timing
-- mid-term engagement drop-off
-
-This means the analysis is **directional only**, not a full lifecycle model.
 
 **Conclusion:**  
 The dataset supports only a simplified interpretation: customer repeat purchase activity is stable, but the absence of continuous time coverage limits deeper lifecycle conclusions.
