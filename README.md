@@ -66,7 +66,7 @@ Based on SQL findings, the highest-leverage interventions are:
 
 3. **Address Fashion's return rate through better product presentation** — 8.05% is the highest category rate and most likely reflects sizing information gaps or photography that misrepresents the product, not a quality problem
 
-4. **Separate customer value from return risk in monitoring** — customer  risk and financial impact should be monitored separately; a blanket return policy change would penalize your best buyers to target a different group entirely
+4. **Separate customer value from return risk in monitoring** — customer risk and financial impact should be monitored separately; a blanket return policy change would penalize your best buyers to target a different group entirely
 
 5. **Build a recurring return dashboard** — track return rate and return loss monthly by category and SKU so trends surface before they compound; Electronics at 7.3% already warrants a standing alert
 
@@ -294,7 +294,8 @@ ecommerce-revenue-leakage/
 │   ├── ERD.png                     # Visual ERD built in dbdiagram.io
 │   ├── architecture.md             # Pipeline architecture and workflow overview
 │   ├── architecture_ETL.png        # ETL flow diagram
-│   └── data_modeling.md            # Normalization decisions and SQL modeling notes
+│   ├── data_modeling.md            # Normalization decisions and SQL modeling notes
+│   └── recommended_next_steps.md  # Four highest-leverage extensions to this analysis
 │
 ├── sql/
 │   ├── 01_schema.sql               # Creates normalized tables with keys and constraints
@@ -310,11 +311,12 @@ ecommerce-revenue-leakage/
 │   ├── 11_customer_behavior_analysis.sql  # Customer behavior risk and financial impact segmentation
 │   ├── 12_cohort_analysis.sql      # Cohort-based repeat purchase and retention analysis
 │   ├── 13_return_reason_analysis.sql     # Return reason breakdown by volume, category, region, and segment
-│   └── 14_profit_margin_analysis.sql     # True economic cost of returns accounting for margin and shipping
+│   ├── 14_profit_margin_analysis.sql     # True economic cost of returns accounting for margin and shipping
+│   └── sql_highlights.md           # Key queries with results, commentary, and business context
 │
 ├── README.md
 └── license
-``` 
+```
 ---
 
 ## Why This Project Stands Out
