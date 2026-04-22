@@ -187,10 +187,6 @@ A blanket return restriction policy would likely be inefficient. The business wo
 
 ## Cohort Analysis — Repeat Purchase Activity
 
-Customers were grouped by first purchase month and tracked for repeat purchase activity over time.
-
-## Cohort Analysis — Repeat Purchase Activity
-
 The dataset covers Oct–Dec 2023 and Oct–Dec 2024. Because months 2–9
 are missing, this is directional only — not a full retention model.
 
