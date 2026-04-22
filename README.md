@@ -9,6 +9,23 @@
 
 This analysis delivers end-to-end SQL investigation: data modeling and normalization, KPI design, customer risk segmentation, Pareto loss analysis, cohort behavior tracking, and business-oriented decision support — all translated into a Power BI dashboard.
 
+---
+
+## Dashboard Preview
+
+![E-Commerce Revenue Leakage Dashboard](dashboard/dashboard_overview.png)
+
+> Built in Power BI · Revenue overview · Customer risk segmentation · Category breakdown · Product loss concentration
+
+This dashboard enables:
+
+- Real-time tracking of return-driven revenue loss
+- Identification of high-risk customers and products
+- Early detection of category-level return spikes
+- Ongoing monitoring of recovery opportunities
+
+---
+
 ## TL;DR
 
 - Found **$389K recoverable revenue loss (5.52%)**
@@ -38,21 +55,6 @@ This analysis delivers end-to-end SQL investigation: data modeling and normaliza
 - **Return-related loss is broader than a simple 80/20 product story**: several products show severe leakage, but loss is not concentrated enough to support a clean “few bad SKUs explain everything” narrative
 - **Customer risk and customer financial impact are not the same thing**: the most extreme returners are not the largest source of total loss
 - The **High Risk** segment is notably extreme, but the much larger **Moderate Risk** segment drives most total return loss through scale, accounting for **57.2%** of leakage
-
----
-
-## Dashboard Preview
-
-![E-Commerce Revenue Leakage Dashboard](dashboard/dashboard_overview.png)
-
-> Built in Power BI · Revenue overview · Customer risk segmentation · Category breakdown · Product loss concentration
-
-This dashboard enables:
-
-- Real-time tracking of return-driven revenue loss
-- Identification of high-risk customers and products
-- Early detection of category-level return spikes
-- Ongoing monitoring of recovery opportunities
 
 ---
 
