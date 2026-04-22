@@ -36,8 +36,8 @@ This analysis delivers end-to-end SQL investigation: data modeling and normaliza
 - **Electronics** generates the most revenue and the most return loss ($166K), making it the single highest-impact category for intervention
 - **Fashion** has the highest return rate at **8.05%**, suggesting expectation mismatch is likely a stronger issue than product defect volume alone
 - **Return-related loss is broader than a simple 80/20 product story**: several products show severe leakage, but loss is not concentrated enough to support a clean “few bad SKUs explain everything” narrative
-- **Customer  risk and customer financial impact are not the same thing**: the most extreme returners are not the largest source of total loss
-- The **High Risk** segment is ally extreme, but the much larger **Moderate Risk** segment drives most total return loss through scale, accounting for **57.2%** of leakage
+- **Customer risk and customer financial impact are not the same thing**: the most extreme returners are not the largest source of total loss
+- The **High Risk** segment is notably extreme, but the much larger **Moderate Risk** segment drives most total return loss through scale, accounting for **57.2%** of leakage
 
 ---
 
@@ -191,8 +191,6 @@ are missing, this is directional only — not a full retention model.
 - Repeat behavior appears **structurally stable, not time-dependent**
 - The signal is more likely driven by **product/category experience rather than customer lifecycle effects**
 
-**Conclusion:**  
-The dataset supports only a simplified interpretation: customer repeat purchase activity is stable, but the absence of continuous time coverage limits deeper lifecycle conclusions.
 
 > Full cohort analysis → [`sql/12_cohort_analysis.sql`](sql/12_cohort_analysis.sql)
 
