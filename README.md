@@ -20,7 +20,7 @@ This analysis delivers end-to-end SQL investigation: data modeling and normaliza
 - Flagged **Electronics ($166K loss)** as the highest-impact category
 - Identified several **high-loss, high-loss-rate products** as the clearest recovery opportunities
 - Delivered a **SQL + Power BI monitoring system** for ongoing leakage tracking
-- 
+  
 ---
 
 ## Dashboard Preview
