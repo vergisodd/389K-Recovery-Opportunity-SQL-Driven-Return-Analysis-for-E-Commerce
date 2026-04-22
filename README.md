@@ -9,6 +9,18 @@
 
 This analysis delivers end-to-end SQL investigation: data modeling and normalization, KPI design, customer risk segmentation, Pareto loss analysis, cohort behavior tracking, and business-oriented decision support — all translated into a Power BI dashboard.
 
+
+---
+
+## TL;DR
+
+- Found **$389K recoverable revenue loss (5.52%)**
+- Identified a **small High Risk segment (42 customers, 53.41% avg return rate)**, but found that it drives only **5.35%** of total return loss
+- Showed that the much larger **Moderate Risk segment drives 57.2% of total return loss**
+- Flagged **Electronics ($166K loss)** as the highest-impact category
+- Identified several **high-loss, high-loss-rate products** as the clearest recovery opportunities
+- Delivered a **SQL + Power BI monitoring system** for ongoing leakage tracking
+- 
 ---
 
 ## Dashboard Preview
@@ -23,18 +35,14 @@ This dashboard enables:
 - Identification of high-risk customers and products
 - Early detection of category-level return spikes
 - Ongoing monitoring of recovery opportunities
-
 ---
 
-## TL;DR
+## Why This Project Stands Out
 
-- Found **$389K recoverable revenue loss (5.52%)**
-- Identified a **small High Risk segment (42 customers, 53.41% avg return rate)**, but found that it drives only **5.35%** of total return loss
-- Showed that the much larger **Moderate Risk segment drives 57.2% of total return loss**
-- Flagged **Electronics ($166K loss)** as the highest-impact category
-- Identified several **high-loss, high-loss-rate products** as the clearest recovery opportunities
-- Delivered a **SQL + Power BI monitoring system** for ongoing leakage tracking
-
+- **Goes beyond basic SQL**: uses window functions, CTEs, segmentation logic, cohort tracking, and Pareto analysis rather than flat aggregations
+- **Focuses on revenue impact, not just metrics**: every query ties back to a dollar figure or a business action
+- **Translates analysis into decisions**: findings are framed as prioritized interventions, not just observations
+- **Includes data modeling and validation**: schema normalization, FK constraints, ETL reconciliation, and join pitfall demonstration show end-to-end rigor, not just querying
 ---
 
 ## Key Metrics
@@ -319,14 +327,6 @@ ecommerce-revenue-leakage/
 ├── README.md
 └── license
 ```
----
-
-## Why This Project Stands Out
-
-- **Goes beyond basic SQL**: uses window functions, CTEs, segmentation logic, cohort tracking, and Pareto analysis rather than flat aggregations
-- **Focuses on revenue impact, not just metrics**: every query ties back to a dollar figure or a business action
-- **Translates analysis into decisions**: findings are framed as prioritized interventions, not just observations
-- **Includes data modeling and validation**: schema normalization, FK constraints, ETL reconciliation, and join pitfall demonstration show end-to-end rigor, not just querying
 
 ---
 
