@@ -273,8 +273,9 @@ A naive join between orders and returns can inflate revenue figures due to row d
 ┌──────────────────────────────────────────────┐
 │  ANALYTICAL LAYER                            │
 │  CTEs · Window functions · Aggregations      │
-│  03 revenue · 04 customer · 05 product       │
-│  06 category                                 │
+│  03–06 core analysis · 07 validation         │
+│  08 pareto · 10 time · 11 behavior           │
+│  12 cohort · 13 reasons · 14 margin          │                               
 └─────────────────────┬────────────────────────┘
                       │
                       ▼
