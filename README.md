@@ -96,13 +96,13 @@ This project goes beyond basic aggregation; every query is designed to answer a 
 | 5 | Return reason breakdown | `PARTITION BY`, actionability `CASE` | What is causing returns — and which team owns the fix? |
 | 6 | True economic cost | Multi-column aggregation, dual `RANK()` | How much do returns actually cost beyond the refund amount? |
 
-## 1. Customer Return Risk Segmentation 
- 
+## 1. Customer Return Risk Segmentation
+
 This analysis separates **behavioral risk** from **financial impact** so customers are not treated as a single return group.
- 
+
 **Why this matters:**
 Most return systems fail because they apply blanket rules across the customer base. That can penalize loyal customers while missing the groups actually creating meaningful return-related loss.
- 
+
 ```sql
 WITH customer_orders AS (
     SELECT
@@ -160,28 +160,17 @@ WHERE total_orders >= 3
 ORDER BY return_loss DESC, return_rate DESC;
 ```
 
-### Customer Risk Segmentation and Financial Impact
+| Behavior Segment | Customers | Avg Return Rate (%) | Total Return Loss | Share of Total Loss (%) | Avg Loss per Customer |
+|:---|---:|---:|---:|---:|---:|
+| High Risk | 42 | 53.41 | 19,317.39 | 5.35 | 459.94 |
+| Moderate Risk | 903 | 26.16 | 206,387.22 | 57.20 | 228.56 |
+| Low Risk | 628 | 14.44 | 135,131.30 | 37.45 | 215.18 |
+| No Returns | 6,187 | 0.00 | 0.00 | 0.00 | 0.00 |
 
-The query logic above becomes more meaningful when aggregated to the segment level. The summary below shows which customer groups are behaviorally risky and which groups actually drive the most financial loss.
+**Key insight:**
+The most extreme returners are not the main financial problem. The High Risk segment contributes only **5.35%** of total return-related loss despite a 53% average return rate. The larger **Moderate Risk** segment drives **57.2%** of leakage through scale — not extreme individual behavior.
 
-Customers were segmented by **return behavior** using return rate and a minimum order threshold to reduce noise from low-activity accounts. To make the analysis business-relevant, each segment was also evaluated by its financial contribution to return-related loss.
-
-| Behavior Segment | Customers | Avg Return Rate (%) | Total Revenue | Total Return Loss | Share of Total Return Loss (%) | Avg Loss per Customer |
-|------------------|-----------|---------------------|---------------|-------------------|-------------------------------|-----------------------|
-| High Risk        | 42        | 53.41               | 27,610.66     | 19,317.39         | 5.35                          | 459.94                |
-| Moderate Risk    | 903       | 26.16               | 724,253.83    | 206,387.22        | 57.20                         | 228.56                |
-| Low Risk         | 628       | 14.44               | 771,076.21    | 135,131.30        | 37.45                         | 215.18                |
-| No Returns       | 6,187     | 0.00                | 4,292,312.10  | 0.00              | 0.00                          | 0.00                  |
-
-**Key insight:**  
-The most extreme returners are not the main financial problem. Although the High Risk segment shows the highest average return, it accounts for only **5.35%** of total return-related loss. The larger **Moderate Risk** segment is the real driver of leakage, accounting for **57.2%** of total return loss.
-
-**What this means:**  
-Return-related revenue leakage is not concentrated in a tiny group of abusive customers. Instead, the larger Moderate Risk population creates the biggest business impact through scale. This suggests the problem is broader than abuse alone and may also reflect product mismatch, fulfillment issues, or expectation gaps.
-
-**Why this matters for policy:**  
-A blanket return restriction policy would likely be inefficient. The business would risk creating friction for healthy customers while failing to meaningfully reduce the main source of financial loss. A better strategy is to monitor extreme returners, but prioritize investigation into the broader Moderate Risk segment where most leakage occurs.
-
+> Full queries with results and commentary → [`sql/sql_highlights.md`](sql/sql_highlights.md)
 
 ---
 
