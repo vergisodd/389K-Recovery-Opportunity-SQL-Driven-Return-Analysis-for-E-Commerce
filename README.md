@@ -77,7 +77,7 @@ Based on SQL findings, the highest-leverage interventions are:
 | Layer | Focus | Key Output |
 |:---|:---|:---|
 | Revenue Overview | Baseline health metrics | $389K leakage on $5.87M revenue |
-| Customer Analysis |  risk + financial impact | High Risk is small; Moderate Risk drives most loss |
+| Customer Analysis | risk + financial impact | High Risk is small; Moderate Risk drives most loss |
 | Product Analysis | SKU-level leakage ranking | High-loss products identified; concentration broader than expected |
 | Category Analysis | Return rate + loss by category | Electronics = highest loss · Fashion = highest rate |
 | Cohort Analysis | Repeat purchase activity over time | Stable observed activity, but limited lifecycle visibility |
