@@ -7,7 +7,7 @@
 
 > **$389K in return-driven revenue loss identified** across a $5.87M e-commerce operation — with SQL-driven segmentation pinpointing exactly where to act first.
 
-This analysis delivers end-to-end SQL investigation: data modeling and normalization, KPI design, customer risk segmentation, Pareto loss analysis, cohort behavior tracking, and business-oriented decision support — all translated into a Power BI dashboard.
+This analysis delivers end-to-end SQL investigation: data modeling and normalization, KPI design, customer risk segmentation, Pareto loss analysis, cohort behavior tracking, and business-oriented decision support that are all translated into a Power BI dashboard.
 
 
 ---
@@ -25,7 +25,7 @@ This analysis delivers end-to-end SQL investigation: data modeling and normaliza
 
 ## Dashboard Preview
 
-![E-Commerce Revenue Leakage Dashboard](dashboard/dashboard_overview.png)
+![E-Commerce Revenue Leakage Dashboard](dashboard/dashboard_preview.png)
 
 > Built in Power BI · Revenue overview · Customer risk segmentation · Category breakdown · Product loss concentration
 
