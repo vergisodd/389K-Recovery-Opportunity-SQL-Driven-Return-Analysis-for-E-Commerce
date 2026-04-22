@@ -180,7 +180,7 @@ ORDER BY return_loss DESC, return_rate DESC;
 **Key insight:**
 The most extreme returners are not the main financial problem. The High Risk segment contributes only **5.35%** of total return-related loss despite a 53% average return rate. The larger **Moderate Risk** segment drives **57.2%** of leakage through scale — not extreme individual behavior.
 
-> Full queries with results and commentary → [`sql/sql_highlights.md`](sql/sql_highlights.md)
+> Full queries with results and commentary → [`sql/sql_highlights.md`](docs/sql_highlights.md)
 
 ---
 
