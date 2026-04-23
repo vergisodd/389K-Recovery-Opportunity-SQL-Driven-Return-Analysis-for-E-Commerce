@@ -1,4 +1,4 @@
-# E-Commerce Revenue Leakage Analysis — SQL-Driven Return Investigation
+# 389K Revenue Leakage Analysis System - SQL + BI + Web-Based E-commerce Return Intelligence
 
 ![Impact](https://img.shields.io/badge/Impact-$389K_Revenue_Loss_Analyzed-blue)
 ![Project](https://img.shields.io/badge/Type-Analytics_Case_Study-green)
