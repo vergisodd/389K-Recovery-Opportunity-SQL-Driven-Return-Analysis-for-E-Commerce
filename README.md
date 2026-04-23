@@ -9,6 +9,15 @@
 
 This analysis delivers end-to-end SQL investigation: data modeling and normalization, KPI design, customer risk segmentation, Pareto loss analysis, cohort behavior tracking, and business-oriented decision support that are all translated into a Power BI dashboard.
 
+## Project Deliverables
+
+This project provides three layers of analysis, ranging from raw data to a stakeholder-ready interface:
+
+| Deliverable | Purpose | Tech Stack |
+| :--- | :--- | :--- |
+| **[SQL Pipeline](https://github.com/vergisodd/389K-Recovery-Opportunity-SQL-Driven-Return-Analysis-for-E-Commerce/tree/main/sql)** | Core analytical logic and data modeling layer | PostgreSQL (CTEs, Window Functions) |
+| **[Interactive Dashboard](https://app.powerbi.com/groups/me/reports/ba915570-2ff7-4372-8ccd-c32797a156a2/6fac9dc000b584475716?experience=power-bi)** | Deep-dive diagnostic analysis for analysts | Power BI |
+| **[Executive Summary Interface](https://revenue-analysis.lovable.app/)** | High-level business summary for decision-makers | React (Lovable) |
 
 ---
 
