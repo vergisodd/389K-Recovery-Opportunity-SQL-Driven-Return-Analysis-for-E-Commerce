@@ -28,7 +28,7 @@ This project provides three layers of analysis, ranging from raw data to a stake
 - Showed that the much larger **Moderate Risk segment drives 57.2% of total return loss**
 - Flagged **Electronics ($166K loss)** as the highest-impact category
 - Identified several **high-loss, high-loss-rate products** as the clearest recovery opportunities
-- Delivered a **SQL + Power BI monitoring system** for ongoing leakage tracking
+- Delivered a **SQL + BI + Web-Based E-commerce Return Intelligence** for ongoing leakage tracking
   
 ---
 
