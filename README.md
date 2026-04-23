@@ -29,6 +29,8 @@ This analysis delivers end-to-end SQL investigation: data modeling and normaliza
 
 > Built in Power BI · Revenue overview · Customer risk segmentation · Category breakdown · Product loss concentration
 
+**[View the Live Interactive Power BI Dashboard](https://app.powerbi.com/groups/me/reports/ba915570-2ff7-4372-8ccd-c32797a156a2/6fac9dc000b584475716?experience=power-bi)**
+
 This dashboard enables:
 
 - Real-time tracking of return-driven revenue loss
