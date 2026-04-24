@@ -274,7 +274,7 @@ A naive join between orders and returns can inflate revenue figures due to row d
 │              ├──► orders ──► returns         │
 │  products ───┘                               │
 │                                              │
-│  FK constraints · no redundancy             │
+│  FK constraints · no redundancy              │
 └─────────────────────┬────────────────────────┘
                       │
                       ▼
